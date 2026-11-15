@@ -6,7 +6,7 @@ import { FINAL_CTA, SITE } from "@/lib/content";
 
 export default function FinalCta() {
   return (
-    <section id="demo" aria-labelledby="demo-title" className="pt-24 md:pt-32">
+    <section id="demo" aria-labelledby="demo-title" className="py-24 md:py-32">
       <Container>
         <div className="well-navy grid items-center gap-10 px-6 py-12 sm:px-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:px-16">
           <Ribbons angle={-12} amplitude={0.45} ribbonWidth={0.2} wires={48} glow={0.4} intensity={0.7} speed={0.35} spin={0.25} clickPulse={false} quality={0.7} />

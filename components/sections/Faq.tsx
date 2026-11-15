@@ -13,12 +13,12 @@ export default function Faq() {
   const uid = useId();
 
   return (
-    <Section id="faq" labelledBy="faq-title">
+    <Section id="faq" labelledBy="faq-title" tone="white">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
         <div>
-          <Heading id="faq-title" eyebrow="Questions" title="Before you make the switch." />
+          <Heading id="faq-title" title="Before you make the switch." />
           <Reveal delay={0.08} className="mt-8 max-w-[420px]">
-            <div className="rounded-[var(--radius-card)] bg-card p-6 shadow-card">
+            <div className="rounded-[var(--radius-card)] surface p-6">
               <div className="flex items-start gap-4">
                 <IconChip>
                   <Headset aria-hidden="true" className="size-[18px]" />
@@ -47,7 +47,7 @@ export default function Faq() {
               const btn = `${uid}-q-${i}`;
               const panel = `${uid}-a-${i}`;
               return (
-                <li key={f.q} className={`rounded-[var(--radius-card)] bg-card transition-shadow ${isOpen ? "shadow-card" : "shadow-[inset_0_0_0_1px_var(--color-line)]"}`}>
+                <li key={f.q} className="surface rounded-[var(--radius-card)]">
                   <h3>
                     <button
                       id={btn}

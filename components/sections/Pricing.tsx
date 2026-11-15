@@ -47,7 +47,7 @@ export default function Pricing() {
   return (
     <Section id="pricing" labelledBy="pricing-title">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-        <Heading id="pricing-title" eyebrow={PRICING.eyebrow} title={PRICING.title} sub={PRICING.lede} />
+        <Heading id="pricing-title" title={PRICING.title} sub={PRICING.lede} />
         <Reveal>
           <div role="radiogroup" aria-label="Billing period" onKeyDown={radios.onKeyDown} className="inline-flex rounded-[12px] bg-page-2 p-1">
             {OPTIONS.map((o, i) => {
@@ -84,7 +84,7 @@ export default function Pricing() {
       <div className="mt-10 grid gap-3 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
         {/* Pro */}
         <Reveal>
-          <div className="relative h-full rounded-[var(--radius-panel)] bg-card p-7 shadow-card sm:p-9">
+          <div className="relative h-full rounded-[var(--radius-panel)] surface p-7 sm:p-9">
             <span aria-hidden="true" className="absolute inset-x-8 -top-px h-0.5 rounded-full bg-accent" />
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="text-[22px] font-medium text-ink">Pro</h3>
@@ -148,7 +148,7 @@ export default function Pricing() {
 
         {/* Enterprise */}
         <Reveal delay={0.06}>
-          <div className="flex h-full flex-col rounded-[var(--radius-panel)] bg-card p-7 shadow-card sm:p-9">
+          <div className="flex h-full flex-col rounded-[var(--radius-panel)] surface p-7 sm:p-9">
             <h3 className="text-[22px] font-medium text-ink">Enterprise</h3>
             <p className="mt-1 text-[15px] text-ink-3">For larger brokerages with their own requirements.</p>
             <p className="mt-7 text-[2.5rem] font-medium leading-none tracking-[-0.03em] text-ink">Let&apos;s talk</p>
@@ -172,7 +172,7 @@ export default function Pricing() {
       </div>
 
       <Reveal className="mt-3">
-        <div className="flex flex-col items-center gap-5 rounded-[var(--radius-card)] bg-card px-6 py-5 shadow-card sm:flex-row sm:justify-between">
+        <div className="flex flex-col items-center gap-5 rounded-[var(--radius-card)] surface px-6 py-5 sm:flex-row sm:justify-between">
           <p className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink">
             <Lock aria-hidden="true" className="size-4 text-accent" /> Security and compliance
           </p>

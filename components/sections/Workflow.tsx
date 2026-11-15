@@ -50,7 +50,6 @@ export default function Workflow() {
     <Section id="product" labelledBy="product-title">
       <Heading
         id="product-title"
-        eyebrow="How it works"
         title="From first inquiry to dispatched load."
         sub="Follow one shipment through BeRocker: it comes in, gets priced, turns into a conversation, a booking and a dispatched load, without leaving the CRM."
       />

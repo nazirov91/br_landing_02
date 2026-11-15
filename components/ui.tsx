@@ -33,37 +33,25 @@ export function Section({
   id,
   labelledBy,
   children,
+  tone = "page",
   className = "",
 }: {
   id?: string;
   labelledBy?: string;
   children: ReactNode;
+  tone?: "page" | "white";
   className?: string;
 }) {
   return (
-    <section id={id} aria-labelledby={labelledBy} className={`pt-24 md:pt-32 ${className}`}>
+    <section id={id} aria-labelledby={labelledBy} className={`py-24 md:py-32 ${tone === "white" ? "band-white" : ""} ${className}`}>
       <Container>{children}</Container>
     </section>
   );
 }
 
-export function Eyebrow({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] font-semibold ${
-        dark ? "bg-navy-2 text-mist ring-1 ring-navy-line" : "bg-card text-ink-2 shadow-card"
-      }`}
-    >
-      <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
-      {children}
-    </span>
-  );
-}
-
-/** Left-aligned heading block: optional eyebrow, h2, supporting line. */
+/** Left-aligned heading block: h2 and a supporting line. */
 export function Heading({
   id,
-  eyebrow,
   title,
   sub,
   dark = false,
@@ -71,7 +59,6 @@ export function Heading({
   children,
 }: {
   id: string;
-  eyebrow?: string;
   title: ReactNode;
   sub?: ReactNode;
   dark?: boolean;
@@ -80,11 +67,6 @@ export function Heading({
 }) {
   return (
     <Reveal className={`max-w-[680px] ${className}`}>
-      {eyebrow && (
-        <div className="mb-5">
-          <Eyebrow dark={dark}>{eyebrow}</Eyebrow>
-        </div>
-      )}
       <h2
         id={id}
         className={`text-balance text-[2rem] font-medium leading-[1.1] tracking-[-0.03em] sm:text-[2.4rem] lg:text-[2.75rem] ${
@@ -152,9 +134,9 @@ export function Placeholder({
   return (
     <Tag
       data-placeholder={note}
-      className={`relative ${inline ? "inline-block" : "block"} rounded-[var(--radius-card)] outline-2 outline-offset-4 outline-dashed outline-flag ${className}`}
+      className={`relative ${inline ? "inline-block" : "block"} rounded-[var(--radius-card)] outline-1 outline-offset-4 outline-dashed outline-flag/70 ${className}`}
     >
-      <span className="pointer-events-none absolute -top-3 right-3 z-10 rounded-full bg-flag px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-flag-ink">
+      <span className="pointer-events-none absolute -top-3 right-3 z-10 rounded-full bg-flag px-1.5 py-px text-[9px] font-bold uppercase tracking-wide text-flag-ink">
         {note}
       </span>
       {children}

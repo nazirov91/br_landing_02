@@ -4,7 +4,7 @@ import { Container, Placeholder, Reveal } from "@/components/ui";
 export default function Proof() {
   const row = [...CLIENTS, ...CLIENTS];
   return (
-    <section id="customers" aria-labelledby="customers-title" className="pt-20 md:pt-28">
+    <section id="customers" aria-labelledby="customers-title" className="pb-24 pt-20 md:pb-32 md:pt-28">
       <Container>
         <h2 id="customers-title" className="text-center text-[15px] font-medium text-ink-3">
           Trusted by auto transport brokers who run on BeRocker
@@ -38,7 +38,7 @@ export default function Proof() {
       <Container className="mt-14">
         <Reveal className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
           <Placeholder note="Placeholder quote" className="h-full">
-            <figure className="flex h-full flex-col justify-between gap-8 rounded-[var(--radius-panel)] bg-card p-7 shadow-card sm:p-9">
+            <figure className="flex h-full flex-col justify-between gap-8 rounded-[var(--radius-panel)] surface p-7 sm:p-9">
               <blockquote className="text-pretty text-[20px] font-medium leading-[1.45] tracking-[-0.01em] text-ink sm:text-[22px]">
                 &ldquo;{QUOTES.proof.text}&rdquo;
               </blockquote>
@@ -52,7 +52,7 @@ export default function Proof() {
             </figure>
           </Placeholder>
 
-          <dl className="grid grid-cols-3 overflow-hidden rounded-[var(--radius-panel)] bg-card shadow-card lg:grid-cols-1">
+          <dl className="grid grid-cols-3 overflow-hidden rounded-[var(--radius-panel)] surface lg:grid-cols-1">
             {STATS.map((s, i) => (
               <div
                 key={s.label}

@@ -3,15 +3,18 @@
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { Bot, Check, MessageSquareText, PhoneIncoming, Plug, ShieldCheck, Sparkles, Tag, Wrench } from "lucide-react";
-import { Eyebrow, IconChip, Placeholder, Reveal, Section, ease } from "@/components/ui";
+import { IconChip, Placeholder, Reveal, Section, ease } from "@/components/ui";
 import { AI } from "@/lib/content";
 
 function ChatDemo() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-120px" });
   const reduce = useReducedMotion();
-  const show = (delay: number) =>
-    reduce ? {} : { initial: { opacity: 0, y: 8 }, animate: inView ? { opacity: 1, y: 0 } : undefined, transition: { duration: 0.45, ease, delay } };
+  const show = (delay: number) => ({
+    initial: { opacity: 0, y: 8 },
+    animate: inView || reduce ? { opacity: 1, y: 0 } : undefined,
+    transition: reduce ? { duration: 0 } : { duration: 0.45, ease, delay },
+  });
 
   return (
     <div ref={ref} className="w-full max-w-[460px] overflow-hidden rounded-[var(--radius-card)] bg-card shadow-float">
@@ -72,15 +75,14 @@ const CONNECTED_ICONS = [Plug, MessageSquareText, ShieldCheck];
 
 export default function AiAssistant() {
   return (
-    <Section id="ai" labelledBy="ai-title">
+    <Section id="ai" labelledBy="ai-title" tone="white">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <Reveal className="well-navy order-2 grid place-items-center px-5 py-12 sm:px-10 sm:py-16 lg:order-1">
           <ChatDemo />
         </Reveal>
 
         <Reveal className="order-1 lg:order-2">
-          <Eyebrow>{AI.eyebrow}</Eyebrow>
-          <h2 id="ai-title" className="mt-5 text-balance text-[2rem] font-medium leading-[1.1] tracking-[-0.03em] text-ink sm:text-[2.4rem] lg:text-[2.75rem]">
+          <h2 id="ai-title" className="text-balance text-[2rem] font-medium leading-[1.1] tracking-[-0.03em] text-ink sm:text-[2.4rem] lg:text-[2.75rem]">
             {AI.title}
           </h2>
           <div className="mt-5">
@@ -104,13 +106,13 @@ export default function AiAssistant() {
         </Reveal>
       </div>
 
-      <div className="mt-12 grid gap-3 md:grid-cols-2">
+      <div className="mt-20 grid gap-12 border-t border-line pt-14 md:grid-cols-2 md:gap-0 md:divide-x md:divide-line">
         {[
           { group: AI.builtIn, icons: BUILT_IN_ICONS },
           { group: AI.connected, icons: CONNECTED_ICONS },
         ].map(({ group, icons }, gi) => (
           <Reveal key={group.title} delay={0.05 * gi}>
-            <div className="h-full rounded-[var(--radius-panel)] bg-card p-7 shadow-card sm:p-8">
+            <div className={`h-full ${gi === 0 ? "md:pr-12" : "md:pl-12"}`}>
               <h3 className="text-[18px] font-medium text-ink">{group.title}</h3>
               <ul className="mt-6 flex flex-col gap-5">
                 {group.items.map((it, i) => {

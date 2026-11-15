@@ -102,8 +102,8 @@ export default function SuperDispatch() {
   const Visual = VISUALS[active];
 
   return (
-    <Section id="super-dispatch" labelledBy="sd-title">
-      <Heading id="sd-title" eyebrow={SUPER_DISPATCH.eyebrow} title={SUPER_DISPATCH.title} sub={SUPER_DISPATCH.lede} />
+    <Section id="super-dispatch" labelledBy="sd-title" tone="white">
+      <Heading id="sd-title" title={SUPER_DISPATCH.title} sub={SUPER_DISPATCH.lede} />
 
       <Reveal className="mt-12">
         <div role="tablist" aria-label="Super Dispatch features" onKeyDown={tabs.onKeyDown} className="grid gap-3 sm:grid-cols-3">
@@ -134,7 +134,7 @@ export default function SuperDispatch() {
         </div>
 
         <div id={`${uid}-panel`} role="tabpanel" aria-labelledby={`${uid}-tab-${active}`} className="mt-3 grid gap-3 lg:grid-cols-2">
-          <div className="flex flex-col justify-between gap-10 rounded-[var(--radius-panel)] bg-card p-7 shadow-card sm:p-9">
+          <div className="flex flex-col justify-between gap-10 rounded-[var(--radius-panel)] surface p-7 sm:p-9">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={active}
@@ -183,12 +183,12 @@ export default function SuperDispatch() {
       {/* What syncs, both directions */}
       <Reveal className="mt-3">
         <Placeholder note="Confirm sync list">
-          <div className="grid items-center gap-6 rounded-[var(--radius-panel)] bg-card p-7 shadow-card sm:p-9 lg:grid-cols-[1fr_auto_1fr]">
+          <div className="grid items-center gap-6 rounded-[var(--radius-panel)] surface p-7 sm:p-9 lg:grid-cols-[1fr_auto_1fr]">
             <div>
               <p className="text-[13px] font-semibold uppercase tracking-wide text-ink-3">BeRocker sends</p>
-              <ul className="mt-3 flex flex-col gap-2">
+              <ul className="mt-2 flex flex-col">
                 {SUPER_DISPATCH.toSD.map((t) => (
-                  <li key={t} className="flex items-center gap-2.5 rounded-[10px] bg-fill px-4 py-3 text-[15px] text-ink">
+                  <li key={t} className="flex items-center gap-2.5 border-b border-line py-3 text-[15px] text-ink last:border-b-0">
                     <ArrowRight aria-hidden="true" className="size-4 text-accent" /> {t}
                   </li>
                 ))}
@@ -203,9 +203,9 @@ export default function SuperDispatch() {
             </div>
             <div>
               <p className="text-[13px] font-semibold uppercase tracking-wide text-ink-3">BeRocker receives</p>
-              <ul className="mt-3 flex flex-col gap-2">
+              <ul className="mt-2 flex flex-col">
                 {SUPER_DISPATCH.fromSD.map((t) => (
-                  <li key={t} className="flex items-center gap-2.5 rounded-[10px] bg-fill px-4 py-3 text-[15px] text-ink">
+                  <li key={t} className="flex items-center gap-2.5 border-b border-line py-3 text-[15px] text-ink last:border-b-0">
                     <ArrowRight aria-hidden="true" className="size-4 rotate-180 text-accent" /> {t}
                   </li>
                 ))}

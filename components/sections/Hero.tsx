@@ -20,8 +20,11 @@ export default function Hero() {
   const lift = useTransform(scrollYProgress, [0, 1], [36, -36]);
   const drift = useTransform(scrollYProgress, [0, 1], [24, -56]);
 
-  const enter = (delay: number, y = 16) =>
-    reduce ? {} : { initial: { opacity: 0, y }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, ease, delay } };
+  const enter = (delay: number, y = 16) => ({
+    initial: { opacity: 0, y },
+    animate: { opacity: 1, y: 0 },
+    transition: reduce ? { duration: 0 } : { duration: 0.9, ease, delay },
+  });
 
   return (
     <section id="top" aria-labelledby="hero-title" className="relative px-2 pt-2 sm:px-3 sm:pt-3">
