@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import DemoForm from "@/components/DemoForm";
-import { softEase } from "@/components/ui";
+import { ease } from "@/components/ui";
 
 type Request = { source: string; plan?: "pro" | "enterprise" };
 type Ctx = { openDemo: (r: Request) => void };
@@ -75,31 +75,31 @@ function DemoDialog({ req, onClose }: { req: Request; onClose: () => void }) {
       exit={{ opacity: 0 }}
       transition={{ duration: reduce ? 0 : 0.2 }}
     >
-      <div className="absolute inset-0 bg-night/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div className="absolute inset-0 bg-navy/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <motion.div
         ref={panel}
         role="dialog"
         aria-modal="true"
         aria-labelledby="demo-dialog-title"
-        className="relative max-h-[92dvh] w-full max-w-[620px] overflow-y-auto rounded-t-3xl bg-white p-6 shadow-float sm:rounded-3xl sm:p-8"
+        className="relative max-h-[92dvh] w-full max-w-[620px] overflow-y-auto rounded-t-[var(--radius-panel)] bg-card p-6 shadow-float sm:rounded-[var(--radius-panel)] sm:p-8"
         initial={reduce ? false : { opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={reduce ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98 }}
-        transition={{ duration: 0.35, ease: softEase }}
+        transition={{ duration: 0.35, ease }}
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:bg-surface hover:text-ink"
+          className="absolute right-4 top-4 grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:bg-fill hover:text-ink"
         >
           <X aria-hidden="true" className="size-5" />
         </button>
-        <p className="text-[13px] font-semibold uppercase tracking-wide text-brand">{enterprise ? "Enterprise" : "Book a demo"}</p>
-        <h2 id="demo-dialog-title" className="mt-2 pr-10 text-2xl font-semibold tracking-[-0.02em] text-ink">
+        <p className="text-[13px] font-semibold uppercase tracking-wide text-accent">{enterprise ? "Enterprise" : "Book a demo"}</p>
+        <h2 id="demo-dialog-title" className="mt-2 pr-10 text-[24px] font-medium tracking-[-0.02em] text-ink">
           {enterprise ? "Tell us about your brokerage" : "See BeRocker on your own lanes"}
         </h2>
-        <p className="mt-2 text-ink-2">
+        <p className="mt-2 text-[15px] text-ink-3">
           {enterprise
             ? "We'll shape a plan around your team, your domain and your requirements."
             : "A 30-minute walkthrough of intake, pricing, conversations and dispatch, built around how you work."}

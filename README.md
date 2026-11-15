@@ -1,4 +1,6 @@
-# BeRocker homepage redesign
+# BeRocker homepage redesign (v2)
+
+Hourline-led layout: off-white page, white cards, one blue accent, one navy for dark panels.
 
 Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Motion. One static page.
 
@@ -17,6 +19,13 @@ Copy `.env.example` to `.env.local`:
 - `NEXT_PUBLIC_SITE_URL` (optional): canonical URL, defaults to `https://berocker.com`.
 
 Without the API URL the form shows a "not connected yet" message instead of sending.
+
+## Colour rules
+
+- Every colour is a token in `app/globals.css` (`@theme`). Tailwind's default palette is switched off,
+  so only token classes exist (`bg-accent`, `text-ink-3`, `bg-navy`, ...).
+- No gradient text. Gradients appear only in panel backgrounds (`well`, `well-navy`) and the ribbons.
+- `components/Ribbons.tsx` reads the ribbon colours from the same tokens.
 
 ## Where things are
 

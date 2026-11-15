@@ -38,19 +38,22 @@ export const HERO = {
   title: ["Your brokerage.", "Fully connected."],
   lede:
     "Manage leads, quotes, conversations, payments and dispatch in one auto transport CRM, with the deepest Super Dispatch integration and support that shows up.",
-  notes: ["$250 Super Dispatch API fee waived", "Connect your AI assistant through MCP"],
+  notes: [
+    { text: "$250 Super Dispatch API fee waived", feeNote: true },
+    { text: "Connect your AI assistant through MCP", feeNote: false },
+  ],
 };
 
 export const CLIENTS = [
   { src: "/img/clients/mercury.svg", alt: "Mercury Auto Transport", w: 160, h: 24 },
-  { src: "/img/clients/snowbridge.png", alt: "Snow Bridge", w: 120, h: 34 },
+  { src: "/img/clients/snowbridge.png", alt: "Snow Bridge", w: 120, h: 34, darken: true },
   { src: "/img/clients/transportation.png", alt: "Nova Car Transportation", w: 110, h: 39 },
   { src: "/img/clients/vehicle-transport.png", alt: "Vehicle Transport", w: 72, h: 36, invert: true },
   { src: "/img/clients/hiyaaks.webp", alt: "Hiyaaks Inc", w: 120, h: 24, invert: true },
   { src: "/img/clients/aaatransporters2.png", alt: "AAA Transporters", w: 84, h: 38 },
   { src: "/img/clients/autoline.webp", alt: "Auto Line Express", w: 150, h: 24 },
   { src: "/img/clients/car-shipping-hawaii.webp", alt: "Car Shipping Hawaii", w: 44, h: 44 },
-  { src: "/img/clients/dasauto.png", alt: "Das Auto", w: 170, h: 17 },
+  { src: "/img/clients/dasauto.png", alt: "Das Auto", w: 170, h: 17, darken: true },
   { src: "/img/clients/direct-express.webp", alt: "Direct Express", w: 120, h: 28 },
   { src: "/img/clients/lisca.webp", alt: "Lisca", w: 96, h: 35 },
   { src: "/img/clients/novaautotransport.png", alt: "Nova Auto Transport", w: 108, h: 36 },
@@ -80,21 +83,24 @@ export const QUOTES = {
 };
 
 export const SUPER_DISPATCH = {
-  eyebrow: "Super Dispatch integration",
+  eyebrow: "Super Dispatch",
   title: "Super Dispatch. Fully in sync.",
   lede:
     "Quote, post, collect offers and dispatch without leaving BeRocker. Loads go out in one click, carrier offers come back in, and every status lands on the shipment it belongs to.",
   cards: [
     {
       title: "Price against the market",
+      short: "AI price next to both load boards",
       body: "Compare BeRocker AI pricing with Super Dispatch and Central Dispatch side by side, and quote with confidence in seconds.",
     },
     {
       title: "Post everywhere in one click",
+      short: "Super Dispatch, Central Dispatch or both",
       body: "Shipment-ready loads go straight to Super Dispatch, Central Dispatch or both. No copy-pasting, no second login.",
     },
     {
       title: "Offers, dispatch and tracking",
+      short: "From carrier bids to delivered",
       body: "Carrier offers roll in, you compare bids and dispatch the winner with one click. Tracking stays on the same shipment.",
     },
   ],
@@ -196,6 +202,12 @@ export const AI = {
   answerItems: [
     { lead: "#174203", vehicle: "2021 Toyota RAV4", route: "Dallas → Denver", note: "Quoted $850, opened twice" },
     { lead: "#174188", vehicle: "2023 Jeep Wrangler", route: "Phoenix → Portland", note: "Quoted $1,120, asked about dates" },
+  ],
+  examples: [
+    "Who needs a follow-up today?",
+    "Which quotes from this week haven't been answered?",
+    "How many bookings did we close this month?",
+    "Show me every lead going to Florida next week",
   ],
   answerOutro: "Want me to draft a text to both? I'll show it to you before anything is sent.",
   tools: ["get-follow-up-list", "get-lead-details"],

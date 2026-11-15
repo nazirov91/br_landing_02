@@ -1,127 +1,117 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 import { SHOW_PLACEHOLDER_MARKERS } from "@/lib/content";
 
-export const softEase = [0.22, 1, 0.36, 1] as const;
+export const ease = [0.23, 1, 0.32, 1] as const;
 
-/** Fade-and-rise entrance, once, when scrolled into view. */
-export function Reveal({
-  children,
-  className,
-  delay = 0,
-  y = 16,
-}: {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-  y?: number;
-}) {
+/** One quiet fade per block, once, when it scrolls into view. */
+export function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
       data-reveal=""
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
+      initial={reduce ? false : { opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.8, ease: softEase, delay }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, ease, delay }}
     >
       {children}
     </motion.div>
   );
 }
 
-/** Page-width band with Cloudlight-style hairline rails and an optional dashed top divider. */
-export function Rail({
+export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={`mx-auto w-full max-w-[1280px] px-5 sm:px-10 ${className}`}>{children}</div>;
+}
+
+/** Page section with Hourline's open rhythm. */
+export function Section({
   id,
+  labelledBy,
   children,
   className = "",
-  innerClassName = "",
-  divider = true,
-  labelledBy,
 }: {
   id?: string;
+  labelledBy?: string;
   children: ReactNode;
   className?: string;
-  innerClassName?: string;
-  divider?: boolean;
-  labelledBy?: string;
 }) {
   return (
-    <section id={id} aria-labelledby={labelledBy} className={`${divider ? "border-t border-dashed border-line-2/70" : ""} ${className}`}>
-      <div className="mx-auto w-full max-w-[calc(1200px+6rem)] px-5 sm:px-12">
-        <div className={`relative ${innerClassName}`}>
-          <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 hidden w-px bg-line sm:block" />
-          <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-px bg-line sm:block" />
-          {children}
-        </div>
-      </div>
+    <section id={id} aria-labelledby={labelledBy} className={`pt-24 md:pt-32 ${className}`}>
+      <Container>{children}</Container>
     </section>
   );
 }
 
-export function SectionHeading({
+export function Eyebrow({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] font-semibold ${
+        dark ? "bg-navy-2 text-mist ring-1 ring-navy-line" : "bg-card text-ink-2 shadow-card"
+      }`}
+    >
+      <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+      {children}
+    </span>
+  );
+}
+
+/** Left-aligned heading block: optional eyebrow, h2, supporting line. */
+export function Heading({
   id,
   eyebrow,
   title,
-  lede,
-  align = "center",
+  sub,
   dark = false,
   className = "",
+  children,
 }: {
   id: string;
   eyebrow?: string;
   title: ReactNode;
-  lede?: ReactNode;
-  align?: "center" | "left";
+  sub?: ReactNode;
   dark?: boolean;
   className?: string;
+  children?: ReactNode;
 }) {
-  const center = align === "center";
   return (
-    <div className={`${center ? "mx-auto flex flex-col items-center text-center" : "flex flex-col items-start text-left"} max-w-[760px] ${className}`}>
+    <Reveal className={`max-w-[680px] ${className}`}>
       {eyebrow && (
-        <Reveal>
-          <p className={`inline-flex items-center gap-1 text-[15px] font-semibold leading-6 ${dark ? "text-[#7fa8ff]" : "text-brand"}`}>
-            {eyebrow}
-            <ChevronRight aria-hidden="true" className="size-4" />
-          </p>
-        </Reveal>
+        <div className="mb-5">
+          <Eyebrow dark={dark}>{eyebrow}</Eyebrow>
+        </div>
       )}
-      <Reveal delay={0.06} className="mt-3">
-        <h2
-          id={id}
-          className={`text-balance text-[2rem] font-semibold leading-[1.1] tracking-[-0.025em] sm:text-[2.5rem] md:text-[2.875rem] ${dark ? "text-white" : "text-ink"}`}
-        >
-          {title}
-        </h2>
-      </Reveal>
-      {lede && (
-        <Reveal delay={0.12} className="mt-5">
-          <p className={`max-w-[640px] text-pretty text-lg leading-7 ${dark ? "text-white/65" : "text-ink-2"}`}>{lede}</p>
-        </Reveal>
-      )}
-    </div>
+      <h2
+        id={id}
+        className={`text-balance text-[2rem] font-medium leading-[1.1] tracking-[-0.03em] sm:text-[2.4rem] lg:text-[2.75rem] ${
+          dark ? "text-white" : "text-ink"
+        }`}
+      >
+        {title}
+      </h2>
+      {sub && <p className={`mt-4 max-w-[56ch] text-pretty text-[17px] leading-[1.6] sm:text-[19px] ${dark ? "text-mist" : "text-ink-3"}`}>{sub}</p>}
+      {children}
+    </Reveal>
   );
 }
 
-type BtnVariant = "primary" | "dark" | "light" | "ghost-dark" | "glass";
+type Variant = "primary" | "quiet" | "quiet-dark";
 
-const btnBase =
-  "group inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-[10px] px-5 text-[15px] font-semibold transition-[background-color,box-shadow,transform,color] duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2";
-const btnVariants: Record<BtnVariant, string> = {
-  primary: "bg-brand text-white shadow-[0_1px_2px_rgb(7_11_18/0.2),inset_0_1px_0_rgb(255_255_255/0.18)] hover:bg-brand-600 focus-visible:outline-brand",
-  dark: "bg-navy text-white hover:bg-navy-2 focus-visible:outline-navy",
-  light: "bg-white text-ink shadow-[inset_0_0_0_1px_var(--color-line-2),0_1px_2px_rgb(27_36_48/0.06)] hover:bg-surface focus-visible:outline-brand",
-  "ghost-dark": "bg-white/[0.06] text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)] backdrop-blur hover:bg-white/[0.12] focus-visible:outline-white",
-  glass: "bg-white text-night hover:bg-white/90 focus-visible:outline-white",
+const base =
+  "group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-control)] font-semibold transition-[background-color,box-shadow,transform,color] duration-150 ease-[var(--ease-out)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+const variants: Record<Variant, string> = {
+  primary: "bg-accent text-white shadow-button hover:bg-accent-hover",
+  quiet: "bg-card text-ink shadow-quiet hover:bg-fill",
+  "quiet-dark": "bg-navy-2 text-white ring-1 ring-navy-line hover:bg-navy-line",
 };
+const sizes = { md: "h-11 px-[18px] text-[15px]", lg: "h-[52px] px-[22px] text-[16px]" };
 
-export function buttonClass(variant: BtnVariant = "primary", size: "md" | "lg" = "md", extra = "") {
-  return `${btnBase} ${btnVariants[variant]} ${size === "lg" ? "h-12 px-6 text-base" : ""} ${extra}`;
+export function buttonClass(variant: Variant = "primary", size: "md" | "lg" = "md", extra = "") {
+  return `${base} ${variants[variant]} ${sizes[size]} ${extra}`;
 }
 
 export function ButtonLink({
@@ -131,29 +121,18 @@ export function ButtonLink({
   className = "",
   children,
   ...rest
-}: ComponentProps<"a"> & { variant?: BtnVariant; size?: "md" | "lg"; arrow?: boolean }) {
+}: ComponentProps<"a"> & { variant?: Variant; size?: "md" | "lg"; arrow?: boolean }) {
   return (
     <a className={buttonClass(variant, size, className)} {...rest}>
       {children}
-      {arrow && <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5" />}
+      {arrow && <ArrowRight aria-hidden="true" className="size-[18px] transition-transform duration-150 group-hover:translate-x-0.5" />}
     </a>
   );
 }
 
-export function Button({
-  variant = "primary",
-  size = "md",
-  arrow = false,
-  className = "",
-  children,
-  ...rest
-}: ComponentProps<"button"> & { variant?: BtnVariant; size?: "md" | "lg"; arrow?: boolean }) {
-  return (
-    <button type="button" className={buttonClass(variant, size, className)} {...rest}>
-      {children}
-      {arrow && <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5" />}
-    </button>
-  );
+/** Small "(loadboard access is separate)" note shown wherever the fee waiver appears. */
+export function FeeNote({ dark = false, className = "" }: { dark?: boolean; className?: string }) {
+  return <span className={`text-[0.85em] font-normal ${dark ? "text-mist" : "text-ink-3"} ${className}`}>(loadboard access is separate)</span>;
 }
 
 /** Amber dashed outline marking content that must be replaced before launch. */
@@ -173,9 +152,9 @@ export function Placeholder({
   return (
     <Tag
       data-placeholder={note}
-      className={`relative ${inline ? "inline-block" : "block"} rounded-lg outline-2 outline-offset-4 outline-dashed outline-amber-400/90 ${className}`}
+      className={`relative ${inline ? "inline-block" : "block"} rounded-[var(--radius-card)] outline-2 outline-offset-4 outline-dashed outline-flag ${className}`}
     >
-      <span className="pointer-events-none absolute -top-3 right-2 z-10 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-950">
+      <span className="pointer-events-none absolute -top-3 right-3 z-10 rounded-full bg-flag px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-flag-ink">
         {note}
       </span>
       {children}
@@ -183,53 +162,53 @@ export function Placeholder({
   );
 }
 
-/** Desktop app window chrome around a screenshot or clip. */
-export function BrowserFrame({
-  children,
-  url = "app.berocker.com",
-  dark = false,
-  className = "",
-}: {
-  children: ReactNode;
-  url?: string;
-  dark?: boolean;
-  className?: string;
-}) {
+/** White app window around a product screenshot or clip. */
+export function AppFrame({ children, url = "app.berocker.com", className = "" }: { children: ReactNode; url?: string; className?: string }) {
   return (
-    <div
-      className={`overflow-hidden rounded-2xl ${dark ? "bg-[#0d1420] shadow-glow ring-1 ring-white/10" : "bg-white shadow-float"} ${className}`}
-    >
-      <div className={`flex h-10 items-center gap-3 border-b px-4 ${dark ? "border-white/[0.08]" : "border-line"}`}>
+    <div className={`overflow-hidden rounded-[var(--radius-card)] bg-card shadow-float ${className}`}>
+      <div className="flex h-9 items-center gap-3 border-b border-line px-3.5">
         <div className="flex gap-1.5" aria-hidden="true">
-          <span className="size-2.5 rounded-full bg-[#ff5f57]" />
-          <span className="size-2.5 rounded-full bg-[#febc2e]" />
-          <span className="size-2.5 rounded-full bg-[#28c840]" />
+          <span className="size-2.5 rounded-full bg-line-2" />
+          <span className="size-2.5 rounded-full bg-line-2" />
+          <span className="size-2.5 rounded-full bg-line-2" />
         </div>
-        <div
-          className={`mx-auto flex h-6 min-w-0 max-w-[260px] flex-1 items-center justify-center truncate rounded-md px-3 text-[12px] ${dark ? "bg-white/[0.06] text-white/50" : "bg-surface text-ink-3"}`}
-        >
+        <div className="mx-auto flex h-6 min-w-0 max-w-[240px] flex-1 items-center justify-center truncate rounded-md bg-fill px-3 text-[12px] text-ink-3">
           {url}
         </div>
-        <span className="w-[42px]" aria-hidden="true" />
+        <span className="w-[38px]" aria-hidden="true" />
       </div>
       {children}
     </div>
   );
 }
 
-export function Logo({ dark = false, className = "" }: { dark?: boolean; className?: string }) {
-  // BeRocker mark and wordmark, from the current site's logo. `dark` = on a dark background.
+/** Square icon chip used in lists and cards. */
+export function IconChip({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
-    <svg viewBox="0 0 230 46" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BeRocker" className={className}>
+    <span
+      className={`grid size-10 shrink-0 place-items-center rounded-[12px] ${
+        dark ? "bg-navy-2 text-white ring-1 ring-navy-line" : "bg-accent-soft text-accent"
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
+
+export function Logo({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 230 46" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BeRocker" className={className}>
       <path
+        className="fill-ink"
         d="M16.7808 10.6203L5.33263 21.9496C4.77196 22.5045 4.77042 23.4098 5.32919 23.9665L16.2133 34.8114C16.7599 35.356 17.6412 35.365 18.1987 34.8317L22.716 30.5107C23.2928 29.959 23.3022 29.0404 22.7367 28.477L18.2273 23.9838C17.6619 23.4204 17.6712 22.5019 18.2481 21.9501L22.7856 17.6098C23.335 17.0842 24.2008 17.0842 24.7503 17.6098L29.3508 22.0103C29.9029 22.5385 30.7738 22.5355 31.3224 22.0037L35.7857 17.6766C36.3562 17.1236 36.3624 16.2103 35.7996 15.6495L30.7557 10.6237C30.4893 10.3583 30.1286 10.2093 29.7526 10.2093H17.7805C17.4061 10.2093 17.0469 10.357 16.7808 10.6203Z"
-        fill={dark ? "#ffffff" : "#1b2430"}
       />
       <path
+        className="fill-accent"
         d="M43.7235 35.3797L55.1717 24.0504C55.7323 23.4956 55.7339 22.5903 55.1751 22.0335L44.291 11.1886C43.7444 10.644 42.8631 10.635 42.3055 11.1684L37.7883 15.4893C37.2115 16.0411 37.2021 16.9596 37.7676 17.523L42.277 22.0162C42.8424 22.5796 42.8331 23.4982 42.2562 24.0499L37.7187 28.3902C37.1693 28.9158 36.3034 28.9158 35.754 28.3902L31.1535 23.9897C30.6014 23.4616 29.7305 23.4645 29.1819 23.9963L24.7186 28.3234C24.1481 28.8765 24.1418 29.7898 24.7047 30.3506L29.7486 35.3763C30.015 35.6417 30.3757 35.7908 30.7517 35.7908H42.7238C43.0982 35.7908 43.4574 35.6431 43.7235 35.3797Z"
-        fill="#2468F2"
       />
-      <path d="M66.6775 35V10.1369H76.4096C78.1619 10.1369 79.6181 10.4093 80.7784 10.9539C81.9624 11.4985 82.8503 12.2562 83.4423 13.2271C84.0343 14.1742 84.3303 15.2753 84.3303 16.5303C84.3303 17.7853 84.058 18.839 83.5133 19.6915C82.9687 20.5439 82.2465 21.1951 81.3467 21.645C80.4706 22.0949 79.5116 22.3672 78.4697 22.4619L79.0025 22.0712C80.1154 22.0949 81.1099 22.3909 81.986 22.9592C82.8858 23.5275 83.5962 24.2734 84.1171 25.1969C84.6381 26.0967 84.8986 27.103 84.8986 28.2159C84.8986 29.5183 84.5789 30.6904 83.9396 31.7323C83.3239 32.7505 82.4123 33.5556 81.2046 34.1476C79.997 34.7159 78.517 35 76.7648 35H66.6775ZM70.9397 31.5192H76.1255C77.5225 31.5192 78.6118 31.1877 79.3932 30.5247C80.1746 29.8616 80.5653 28.9382 80.5653 27.7542C80.5653 26.5702 80.1627 25.6349 79.3577 24.9482C78.5526 24.2379 77.4515 23.8827 76.0544 23.8827H70.9397V31.5192ZM70.9397 20.6505H75.8058C77.1792 20.6505 78.2211 20.3426 78.9314 19.727C79.6418 19.0876 79.997 18.2115 79.997 17.0986C79.997 16.0094 79.6418 15.1569 78.9314 14.5413C78.2211 13.9019 77.1673 13.5823 75.7703 13.5823H70.9397V20.6505ZM97.221 35.4262C95.4451 35.4262 93.8823 35.0474 92.5326 34.2896C91.1829 33.5082 90.1291 32.419 89.3714 31.0219C88.6137 29.6248 88.2348 28.0147 88.2348 26.1914C88.2348 24.297 88.6018 22.6395 89.3359 21.2188C90.0936 19.798 91.1473 18.6851 92.497 17.88C93.8704 17.0749 95.4569 16.6724 97.2565 16.6724C99.0088 16.6724 100.536 17.0631 101.838 17.8445C103.141 18.6259 104.147 19.6796 104.858 21.0057C105.568 22.308 105.923 23.7761 105.923 25.41C105.923 25.6468 105.923 25.9072 105.923 26.1914C105.923 26.4755 105.899 26.7715 105.852 27.0793H91.2894V24.3444H101.625C101.578 23.0421 101.14 22.0239 100.311 21.2898C99.4824 20.5321 98.4523 20.1532 97.221 20.1532C96.3449 20.1532 95.5398 20.3545 94.8058 20.757C94.0717 21.1596 93.4916 21.7634 93.0653 22.5685C92.6391 23.3499 92.426 24.3444 92.426 25.552V26.5821C92.426 27.695 92.6273 28.654 93.0298 29.4591C93.4561 30.2642 94.0244 30.8798 94.7347 31.3061C95.4688 31.7086 96.2857 31.9099 97.1855 31.9099C98.18 31.9099 98.997 31.6968 99.6363 31.2705C100.299 30.8443 100.785 30.276 101.093 29.5656H105.426C105.094 30.6786 104.55 31.6849 103.792 32.5847C103.034 33.4609 102.099 34.1594 100.986 34.6803C99.8731 35.1776 98.6181 35.4262 97.221 35.4262ZM110.001 35V10.1369H118.916C120.881 10.1369 122.503 10.4803 123.782 11.167C125.084 11.83 126.043 12.7298 126.659 13.8664C127.298 14.9793 127.618 16.2462 127.618 17.6669C127.618 18.9929 127.31 20.2242 126.694 21.3608C126.079 22.4974 125.12 23.4091 123.817 24.0958C122.515 24.7825 120.846 25.1258 118.809 25.1258H114.263V35H110.001ZM122.965 35L117.744 24.0247H122.361L127.831 35H122.965ZM114.263 21.9647H118.632C120.218 21.9647 121.378 21.5858 122.112 20.8281C122.87 20.0467 123.249 19.0285 123.249 17.7735C123.249 16.5421 122.882 15.5595 122.148 14.8254C121.414 14.0677 120.242 13.6888 118.632 13.6888H114.263V21.9647ZM139.156 35.4262C137.451 35.4262 135.912 35.0355 134.538 34.2541C133.189 33.449 132.123 32.3479 131.342 30.9509C130.584 29.5301 130.205 27.9081 130.205 26.0848C130.205 24.2142 130.596 22.5803 131.377 21.1832C132.159 19.7625 133.224 18.6614 134.574 17.88C135.947 17.0749 137.486 16.6724 139.191 16.6724C140.896 16.6724 142.423 17.0749 143.773 17.88C145.147 18.6614 146.212 19.7507 146.97 21.1477C147.751 22.5448 148.142 24.1787 148.142 26.0493C148.142 27.92 147.751 29.5538 146.97 30.9509C146.188 32.3479 145.111 33.449 143.738 34.2541C142.388 35.0355 140.861 35.4262 139.156 35.4262ZM139.156 31.7678C140.008 31.7678 140.778 31.5547 141.464 31.1285C142.175 30.7022 142.743 30.0629 143.169 29.2105C143.596 28.358 143.809 27.3043 143.809 26.0493C143.809 24.7943 143.596 23.7524 143.169 22.9237C142.767 22.0712 142.21 21.4319 141.5 21.0057C140.813 20.5794 140.044 20.3663 139.191 20.3663C138.363 20.3663 137.593 20.5794 136.883 21.0057C136.172 21.4319 135.604 22.0712 135.178 22.9237C134.751 23.7524 134.538 24.7943 134.538 26.0493C134.538 27.3043 134.751 28.358 135.178 29.2105C135.604 30.0629 136.16 30.7022 136.847 31.1285C137.557 31.5547 138.327 31.7678 139.156 31.7678ZM160.803 35.4262C159.051 35.4262 157.476 35.0355 156.079 34.2541C154.706 33.449 153.629 32.3479 152.847 30.9509C152.089 29.5301 151.711 27.92 151.711 26.1203C151.711 24.2497 152.089 22.6158 152.847 21.2188C153.629 19.798 154.706 18.6851 156.079 17.88C157.476 17.0749 159.063 16.6724 160.839 16.6724C163.065 16.6724 164.935 17.2644 166.451 18.4483C167.966 19.6086 168.937 21.2069 169.363 23.2433H164.888C164.651 22.3435 164.154 21.6332 163.396 21.1122C162.662 20.5913 161.786 20.3308 160.768 20.3308C159.892 20.3308 159.087 20.5558 158.352 21.0057C157.642 21.4556 157.074 22.1067 156.648 22.9592C156.245 23.8116 156.044 24.8417 156.044 26.0493C156.044 26.9728 156.162 27.7897 156.399 28.5001C156.636 29.2105 156.967 29.8143 157.393 30.3115C157.843 30.7851 158.352 31.1521 158.921 31.4126C159.489 31.6731 160.105 31.8033 160.768 31.8033C161.454 31.8033 162.07 31.6968 162.615 31.4837C163.183 31.2469 163.657 30.9035 164.035 30.4536C164.438 30.0037 164.722 29.4709 164.888 28.8553H169.363C168.937 30.8443 167.966 32.4427 166.451 33.6503C164.935 34.8342 163.053 35.4262 160.803 35.4262ZM185.016 35L177.096 25.1969L184.2 17.0986H189.279L180.435 26.9373V23.634L190.344 35H185.016ZM173.473 35V9.42658H177.735V35H173.473ZM200.17 35.4262C198.394 35.4262 196.831 35.0474 195.481 34.2896C194.131 33.5082 193.078 32.419 192.32 31.0219C191.562 29.6248 191.183 28.0147 191.183 26.1914C191.183 24.297 191.55 22.6395 192.284 21.2188C193.042 19.798 194.096 18.6851 195.446 17.88C196.819 17.0749 198.405 16.6724 200.205 16.6724C201.957 16.6724 203.485 17.0631 204.787 17.8445C206.089 18.6259 207.096 19.6796 207.806 21.0057C208.516 22.308 208.872 23.7761 208.872 25.41C208.872 25.6468 208.872 25.9072 208.872 26.1914C208.872 26.4755 208.848 26.7715 208.801 27.0793H194.238V24.3444H204.574C204.527 23.0421 204.088 22.0239 203.26 21.2898C202.431 20.5321 201.401 20.1532 200.17 20.1532C199.293 20.1532 198.488 20.3545 197.754 20.757C197.02 21.1596 196.44 21.7634 196.014 22.5685C195.588 23.3499 195.375 24.3444 195.375 25.552V26.5821C195.375 27.695 195.576 28.654 195.978 29.4591C196.405 30.2642 196.973 30.8798 197.683 31.3061C198.417 31.7086 199.234 31.9099 200.134 31.9099C201.129 31.9099 201.946 31.6968 202.585 31.2705C203.248 30.8443 203.733 30.276 204.041 29.5656H208.374C208.043 30.6786 207.498 31.6849 206.741 32.5847C205.983 33.4609 205.047 34.1594 203.935 34.6803C202.822 35.1776 201.567 35.4262 200.17 35.4262ZM212.807 35V17.0986H216.608L216.998 20.4374C217.424 19.6559 217.957 18.9929 218.597 18.4483C219.236 17.88 219.982 17.442 220.834 17.1341C221.71 16.8263 222.669 16.6724 223.711 16.6724V21.1832H222.219C221.509 21.1832 220.834 21.278 220.195 21.4674C219.556 21.6332 218.999 21.9173 218.526 22.3198C218.076 22.6987 217.72 23.2315 217.46 23.9182C217.199 24.5812 217.069 25.4218 217.069 26.44V35H212.807Z" fill={dark ? "#ffffff" : "#1b2430"} />
+      <path className="fill-ink" d={WORDMARK} />
     </svg>
   );
 }
+
+const WORDMARK = "M66.6775 35V10.1369H76.4096C78.1619 10.1369 79.6181 10.4093 80.7784 10.9539C81.9624 11.4985 82.8503 12.2562 83.4423 13.2271C84.0343 14.1742 84.3303 15.2753 84.3303 16.5303C84.3303 17.7853 84.058 18.839 83.5133 19.6915C82.9687 20.5439 82.2465 21.1951 81.3467 21.645C80.4706 22.0949 79.5116 22.3672 78.4697 22.4619L79.0025 22.0712C80.1154 22.0949 81.1099 22.3909 81.986 22.9592C82.8858 23.5275 83.5962 24.2734 84.1171 25.1969C84.6381 26.0967 84.8986 27.103 84.8986 28.2159C84.8986 29.5183 84.5789 30.6904 83.9396 31.7323C83.3239 32.7505 82.4123 33.5556 81.2046 34.1476C79.997 34.7159 78.517 35 76.7648 35H66.6775ZM70.9397 31.5192H76.1255C77.5225 31.5192 78.6118 31.1877 79.3932 30.5247C80.1746 29.8616 80.5653 28.9382 80.5653 27.7542C80.5653 26.5702 80.1627 25.6349 79.3577 24.9482C78.5526 24.2379 77.4515 23.8827 76.0544 23.8827H70.9397V31.5192ZM70.9397 20.6505H75.8058C77.1792 20.6505 78.2211 20.3426 78.9314 19.727C79.6418 19.0876 79.997 18.2115 79.997 17.0986C79.997 16.0094 79.6418 15.1569 78.9314 14.5413C78.2211 13.9019 77.1673 13.5823 75.7703 13.5823H70.9397V20.6505ZM97.221 35.4262C95.4451 35.4262 93.8823 35.0474 92.5326 34.2896C91.1829 33.5082 90.1291 32.419 89.3714 31.0219C88.6137 29.6248 88.2348 28.0147 88.2348 26.1914C88.2348 24.297 88.6018 22.6395 89.3359 21.2188C90.0936 19.798 91.1473 18.6851 92.497 17.88C93.8704 17.0749 95.4569 16.6724 97.2565 16.6724C99.0088 16.6724 100.536 17.0631 101.838 17.8445C103.141 18.6259 104.147 19.6796 104.858 21.0057C105.568 22.308 105.923 23.7761 105.923 25.41C105.923 25.6468 105.923 25.9072 105.923 26.1914C105.923 26.4755 105.899 26.7715 105.852 27.0793H91.2894V24.3444H101.625C101.578 23.0421 101.14 22.0239 100.311 21.2898C99.4824 20.5321 98.4523 20.1532 97.221 20.1532C96.3449 20.1532 95.5398 20.3545 94.8058 20.757C94.0717 21.1596 93.4916 21.7634 93.0653 22.5685C92.6391 23.3499 92.426 24.3444 92.426 25.552V26.5821C92.426 27.695 92.6273 28.654 93.0298 29.4591C93.4561 30.2642 94.0244 30.8798 94.7347 31.3061C95.4688 31.7086 96.2857 31.9099 97.1855 31.9099C98.18 31.9099 98.997 31.6968 99.6363 31.2705C100.299 30.8443 100.785 30.276 101.093 29.5656H105.426C105.094 30.6786 104.55 31.6849 103.792 32.5847C103.034 33.4609 102.099 34.1594 100.986 34.6803C99.8731 35.1776 98.6181 35.4262 97.221 35.4262ZM110.001 35V10.1369H118.916C120.881 10.1369 122.503 10.4803 123.782 11.167C125.084 11.83 126.043 12.7298 126.659 13.8664C127.298 14.9793 127.618 16.2462 127.618 17.6669C127.618 18.9929 127.31 20.2242 126.694 21.3608C126.079 22.4974 125.12 23.4091 123.817 24.0958C122.515 24.7825 120.846 25.1258 118.809 25.1258H114.263V35H110.001ZM122.965 35L117.744 24.0247H122.361L127.831 35H122.965ZM114.263 21.9647H118.632C120.218 21.9647 121.378 21.5858 122.112 20.8281C122.87 20.0467 123.249 19.0285 123.249 17.7735C123.249 16.5421 122.882 15.5595 122.148 14.8254C121.414 14.0677 120.242 13.6888 118.632 13.6888H114.263V21.9647ZM139.156 35.4262C137.451 35.4262 135.912 35.0355 134.538 34.2541C133.189 33.449 132.123 32.3479 131.342 30.9509C130.584 29.5301 130.205 27.9081 130.205 26.0848C130.205 24.2142 130.596 22.5803 131.377 21.1832C132.159 19.7625 133.224 18.6614 134.574 17.88C135.947 17.0749 137.486 16.6724 139.191 16.6724C140.896 16.6724 142.423 17.0749 143.773 17.88C145.147 18.6614 146.212 19.7507 146.97 21.1477C147.751 22.5448 148.142 24.1787 148.142 26.0493C148.142 27.92 147.751 29.5538 146.97 30.9509C146.188 32.3479 145.111 33.449 143.738 34.2541C142.388 35.0355 140.861 35.4262 139.156 35.4262ZM139.156 31.7678C140.008 31.7678 140.778 31.5547 141.464 31.1285C142.175 30.7022 142.743 30.0629 143.169 29.2105C143.596 28.358 143.809 27.3043 143.809 26.0493C143.809 24.7943 143.596 23.7524 143.169 22.9237C142.767 22.0712 142.21 21.4319 141.5 21.0057C140.813 20.5794 140.044 20.3663 139.191 20.3663C138.363 20.3663 137.593 20.5794 136.883 21.0057C136.172 21.4319 135.604 22.0712 135.178 22.9237C134.751 23.7524 134.538 24.7943 134.538 26.0493C134.538 27.3043 134.751 28.358 135.178 29.2105C135.604 30.0629 136.16 30.7022 136.847 31.1285C137.557 31.5547 138.327 31.7678 139.156 31.7678ZM160.803 35.4262C159.051 35.4262 157.476 35.0355 156.079 34.2541C154.706 33.449 153.629 32.3479 152.847 30.9509C152.089 29.5301 151.711 27.92 151.711 26.1203C151.711 24.2497 152.089 22.6158 152.847 21.2188C153.629 19.798 154.706 18.6851 156.079 17.88C157.476 17.0749 159.063 16.6724 160.839 16.6724C163.065 16.6724 164.935 17.2644 166.451 18.4483C167.966 19.6086 168.937 21.2069 169.363 23.2433H164.888C164.651 22.3435 164.154 21.6332 163.396 21.1122C162.662 20.5913 161.786 20.3308 160.768 20.3308C159.892 20.3308 159.087 20.5558 158.352 21.0057C157.642 21.4556 157.074 22.1067 156.648 22.9592C156.245 23.8116 156.044 24.8417 156.044 26.0493C156.044 26.9728 156.162 27.7897 156.399 28.5001C156.636 29.2105 156.967 29.8143 157.393 30.3115C157.843 30.7851 158.352 31.1521 158.921 31.4126C159.489 31.6731 160.105 31.8033 160.768 31.8033C161.454 31.8033 162.07 31.6968 162.615 31.4837C163.183 31.2469 163.657 30.9035 164.035 30.4536C164.438 30.0037 164.722 29.4709 164.888 28.8553H169.363C168.937 30.8443 167.966 32.4427 166.451 33.6503C164.935 34.8342 163.053 35.4262 160.803 35.4262ZM185.016 35L177.096 25.1969L184.2 17.0986H189.279L180.435 26.9373V23.634L190.344 35H185.016ZM173.473 35V9.42658H177.735V35H173.473ZM200.17 35.4262C198.394 35.4262 196.831 35.0474 195.481 34.2896C194.131 33.5082 193.078 32.419 192.32 31.0219C191.562 29.6248 191.183 28.0147 191.183 26.1914C191.183 24.297 191.55 22.6395 192.284 21.2188C193.042 19.798 194.096 18.6851 195.446 17.88C196.819 17.0749 198.405 16.6724 200.205 16.6724C201.957 16.6724 203.485 17.0631 204.787 17.8445C206.089 18.6259 207.096 19.6796 207.806 21.0057C208.516 22.308 208.872 23.7761 208.872 25.41C208.872 25.6468 208.872 25.9072 208.872 26.1914C208.872 26.4755 208.848 26.7715 208.801 27.0793H194.238V24.3444H204.574C204.527 23.0421 204.088 22.0239 203.26 21.2898C202.431 20.5321 201.401 20.1532 200.17 20.1532C199.293 20.1532 198.488 20.3545 197.754 20.757C197.02 21.1596 196.44 21.7634 196.014 22.5685C195.588 23.3499 195.375 24.3444 195.375 25.552V26.5821C195.375 27.695 195.576 28.654 195.978 29.4591C196.405 30.2642 196.973 30.8798 197.683 31.3061C198.417 31.7086 199.234 31.9099 200.134 31.9099C201.129 31.9099 201.946 31.6968 202.585 31.2705C203.248 30.8443 203.733 30.276 204.041 29.5656H208.374C208.043 30.6786 207.498 31.6849 206.741 32.5847C205.983 33.4609 205.047 34.1594 203.935 34.6803C202.822 35.1776 201.567 35.4262 200.17 35.4262ZM212.807 35V17.0986H216.608L216.998 20.4374C217.424 19.6559 217.957 18.9929 218.597 18.4483C219.236 17.88 219.982 17.442 220.834 17.1341C221.71 16.8263 222.669 16.6724 223.711 16.6724V21.1832H222.219C221.509 21.1832 220.834 21.278 220.195 21.4674C219.556 21.6332 218.999 21.9173 218.526 22.3198C218.076 22.6987 217.72 23.2315 217.46 23.9182C217.199 24.5812 217.069 25.4218 217.069 26.44V35H212.807Z";

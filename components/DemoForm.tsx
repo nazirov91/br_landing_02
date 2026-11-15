@@ -182,7 +182,7 @@ export default function DemoForm({
         <p className="text-xl font-semibold text-ink">Thanks, your request is in.</p>
         <p className="text-ink-2">Our team will reach out shortly to set up your walkthrough.</p>
         {onDone && (
-          <button type="button" onClick={onDone} className={buttonClass("light", "md", "mt-2")}>
+          <button type="button" onClick={onDone} className={buttonClass("quiet", "md", "mt-2")}>
             Close
           </button>
         )}
@@ -197,7 +197,7 @@ export default function DemoForm({
       <div className="flex flex-col gap-1.5">
         <label htmlFor={id} className="text-[13px] font-semibold text-ink">
           {label}
-          {opts.required && <span className="text-brand"> *</span>}
+          {opts.required && <span className="text-accent"> *</span>}
         </label>
         <input
           id={id}
@@ -210,10 +210,10 @@ export default function DemoForm({
           inputMode={opts.inputMode}
           aria-invalid={!!err}
           aria-describedby={err ? `${id}-err` : undefined}
-          className={`h-11 rounded-[10px] bg-white px-3.5 text-[15px] text-ink outline-none ring-1 transition-shadow placeholder:text-ink-3/70 focus:ring-2 focus:ring-brand ${err ? "ring-red-400" : "ring-line-2"}`}
+          className={`h-11 rounded-[var(--radius-control)] bg-card px-3.5 text-[15px] text-ink outline-none ring-1 transition-shadow placeholder:text-ink-3 focus:ring-2 focus:ring-accent ${err ? "ring-danger" : "ring-line-2"}`}
         />
         {err && (
-          <p id={`${id}-err`} className="text-[13px] text-red-600">
+          <p id={`${id}-err`} className="text-[13px] text-danger">
             {err}
           </p>
         )}
@@ -237,7 +237,7 @@ export default function DemoForm({
           type="checkbox"
           checked={agree}
           onChange={(e) => setAgree(e.target.checked)}
-          className="mt-0.5 size-4 shrink-0 accent-[var(--color-brand)]"
+          className="mt-0.5 size-4 shrink-0 accent-[var(--color-accent)]"
         />
         <span>
           {SMS_CONSENT} You can also find our{" "}
@@ -255,7 +255,7 @@ export default function DemoForm({
       {TURNSTILE_KEY && <div ref={tsRef} className="min-h-[65px]" />}
 
       {errors.form && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-[13px] text-red-700">
+        <p role="alert" className="rounded-lg bg-danger-soft px-3 py-2 text-[13px] text-danger">
           {errors.form}
         </p>
       )}

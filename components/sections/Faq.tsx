@@ -2,8 +2,8 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useId, useState } from "react";
-import { Plus } from "lucide-react";
-import { Placeholder, Rail, Reveal, SectionHeading, buttonClass, softEase } from "@/components/ui";
+import { ChevronDown, Headset } from "lucide-react";
+import { Heading, IconChip, Placeholder, Reveal, Section, buttonClass, ease } from "@/components/ui";
 import { DemoButton } from "@/components/DemoProvider";
 import { FAQ, SITE } from "@/lib/content";
 
@@ -13,35 +13,41 @@ export default function Faq() {
   const uid = useId();
 
   return (
-    <Rail id="faq" labelledBy="faq-title" innerClassName="py-24 sm:py-28">
-      <div className="grid gap-12 px-0 sm:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+    <Section id="faq" labelledBy="faq-title">
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
         <div>
-          <SectionHeading
-            id="faq-title"
-            align="left"
-            eyebrow="Questions"
-            title="Before you make the switch."
-            lede="The things brokers ask us most before they move over. Anything else, ask a person."
-          />
-          <Reveal delay={0.16} className="mt-7 flex flex-wrap gap-3">
-            <DemoButton source="faq" className={buttonClass("light")}>
-              Ask during a demo
-            </DemoButton>
-            <a href={SITE.phoneHref} className={buttonClass("light")}>
-              Call {SITE.phone}
-            </a>
+          <Heading id="faq-title" eyebrow="Questions" title="Before you make the switch." />
+          <Reveal delay={0.08} className="mt-8 max-w-[420px]">
+            <div className="rounded-[var(--radius-card)] bg-card p-6 shadow-card">
+              <div className="flex items-start gap-4">
+                <IconChip>
+                  <Headset aria-hidden="true" className="size-[18px]" />
+                </IconChip>
+                <div>
+                  <p className="text-[16px] font-semibold text-ink">Still deciding?</p>
+                  <p className="mt-1 text-[15px] leading-6 text-ink-3">Talk to a person who knows auto transport. We&apos;ll answer anything that isn&apos;t here.</p>
+                </div>
+              </div>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <DemoButton source="faq" className={buttonClass("quiet")}>
+                  Book a call
+                </DemoButton>
+                <a href={SITE.phoneHref} className={buttonClass("quiet")}>
+                  {SITE.phone}
+                </a>
+              </div>
+            </div>
           </Reveal>
         </div>
 
-        <Reveal delay={0.08}>
-          <ul className="flex flex-col">
+        <Reveal delay={0.04}>
+          <ul className="flex flex-col gap-2">
             {FAQ.map((f, i) => {
               const isOpen = open === i;
               const btn = `${uid}-q-${i}`;
               const panel = `${uid}-a-${i}`;
-              const answer = <p className="pb-6 pr-10 text-[15px] leading-7 text-ink-2">{f.a}</p>;
               return (
-                <li key={f.q} className="border-b border-line first:border-t">
+                <li key={f.q} className={`rounded-[var(--radius-card)] bg-card transition-shadow ${isOpen ? "shadow-card" : "shadow-[inset_0_0_0_1px_var(--color-line)]"}`}>
                   <h3>
                     <button
                       id={btn}
@@ -49,13 +55,10 @@ export default function Faq() {
                       aria-expanded={isOpen}
                       aria-controls={panel}
                       onClick={() => setOpen(isOpen ? null : i)}
-                      className="flex w-full items-center justify-between gap-6 py-5 text-left text-[17px] font-semibold text-ink transition-colors hover:text-brand"
+                      className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left text-[16px] font-medium text-ink"
                     >
                       {f.q}
-                      <Plus
-                        aria-hidden="true"
-                        className={`size-5 shrink-0 text-ink-3 transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}
-                      />
+                      <ChevronDown aria-hidden="true" className={`size-5 shrink-0 text-ink-3 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
                     </button>
                   </h3>
                   <AnimatePresence initial={false}>
@@ -67,16 +70,18 @@ export default function Faq() {
                         initial={reduce ? false : { height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                        transition={{ duration: 0.35, ease: softEase }}
+                        transition={{ duration: 0.3, ease }}
                         className="overflow-hidden"
                       >
-                        {f.placeholder ? (
-                          <Placeholder note="Placeholder" className="mb-6">
-                            <p className="pr-10 text-[15px] leading-7 text-ink-2">{f.a}</p>
-                          </Placeholder>
-                        ) : (
-                          answer
-                        )}
+                        <div className="px-6 pb-6">
+                          {f.placeholder ? (
+                            <Placeholder note="Placeholder">
+                              <p className="text-[15px] leading-7 text-ink-3">{f.a}</p>
+                            </Placeholder>
+                          ) : (
+                            <p className="text-[15px] leading-7 text-ink-3">{f.a}</p>
+                          )}
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -86,6 +91,6 @@ export default function Faq() {
           </ul>
         </Reveal>
       </div>
-    </Rail>
+    </Section>
   );
 }
