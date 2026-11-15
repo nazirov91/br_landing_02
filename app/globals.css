@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+  BeRocker palette, one step darker than berocker.com:
+  brand #2b73ff -> #2468f2, violet #8b5cf6 -> #7c4fe8, navy #132030 -> #0e1826,
+  body text #232d3d -> #1b2430, light surface #f5f5f7 -> #f3f4f7.
+*/
+@theme {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-brand: #2468f2;
+  --color-brand-600: #1c56d4;
+  --color-brand-700: #1847b0;
+  --color-brand-50: #edf3ff;
+  --color-brand-100: #dbe7ff;
+  --color-violet: #7c4fe8;
+  --color-violet-50: #f3effe;
+  --color-navy: #0e1826;
+  --color-navy-2: #142236;
+  --color-night: #070b12;
+  --color-ink: #1b2430;
+  --color-ink-2: #465163;
+  --color-ink-3: #6b7686;
+  --color-surface: #f3f4f7;
+  --color-surface-2: #eceef3;
+  --color-line: rgb(27 36 48 / 0.09);
+  --color-line-2: rgb(27 36 48 / 0.16);
+  --color-success: #0f9d63;
+  --color-warn: #b7791f;
+
+  --shadow-card: 0 0 0 1px rgb(27 36 48 / 0.06), 0 1px 2px rgb(27 36 48 / 0.05), 0 8px 24px -12px rgb(27 36 48 / 0.16);
+  --shadow-float: 0 0 0 1px rgb(27 36 48 / 0.06), 0 2px 4px rgb(27 36 48 / 0.05), 0 24px 48px -20px rgb(27 36 48 / 0.28);
+  --shadow-glow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 30px 80px -30px rgb(36 104 242 / 0.55);
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-marquee: marquee 48s linear infinite;
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    font-synthesis: none;
+  }
+  ::selection {
+    background: var(--color-brand-100);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+  section[id] {
+    scroll-margin-top: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  /* Server-rendered entrance states must never hide content for reduced-motion users. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Soft tinted panels (Hourline "wells" / Cloudlight tints), in BeRocker blues. */
+@utility tint-sky {
+  background: radial-gradient(140% 120% at 10% 0%, #f2f7ff 0%, #dce8ff 55%, #c3d6fb 100%);
+}
+@utility tint-violet {
+  background: radial-gradient(140% 120% at 10% 0%, #f7f3ff 0%, #e6dcfd 55%, #d2c2f8 100%);
+}
+@utility tint-mint {
+  background: radial-gradient(140% 120% at 10% 0%, #effbf6 0%, #cfeee0 55%, #b2e1cb 100%);
+}
+@utility tint-slate {
+  background: radial-gradient(140% 120% at 90% 0%, #f8f9fb 0%, #e9ecf2 55%, #d8dde7 100%);
+}
+
+/* Faint dot grid used behind dark panels. */
+@utility dot-grid {
+  background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+}

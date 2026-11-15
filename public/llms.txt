@@ -1,0 +1,42 @@
+# BeRocker
+
+> BeRocker is an AI-powered CRM built specifically for auto transport (car shipping) brokers in the United States. It covers the full brokerage workflow in one platform: lead intake, AI pricing, omnichannel customer communication (SMS, calls, email, WhatsApp), load board posting to Super Dispatch and Central Dispatch, carrier offers, and dispatch.
+
+Key facts:
+- Product: web-based CRM (works on desktop, tablet, and phone — the full workspace, not a cut-down mobile app)
+- Audience: auto transport brokers and brokerages of any size
+- Pricing: Pro plan $199/month (base license + 1 seat included; additional seats $69/each, $59/each beyond 5 seats; Super Dispatch API subscription included free — a $250 value). Enterprise plan: custom pricing with dedicated server, white label on your own custom domain, deeper customizations, and prioritized support.
+- BeRocker does not sell, generate, or offer leads to customers — it manages the leads brokers already buy or generate.
+- AI integrations: BeRocker offers Claude and ChatGPT MCP (Model Context Protocol) connections, so agents can work with a brokerage's CRM data directly.
+- Contact: +1 302 313 0966, info@berocker.com
+- Address: 15 Worthington Access Dr, Ste 12, Maryland Heights, MO 63043, USA
+- Sign in: https://app.berocker.com
+- Sign up: https://berocker.com/sign-up
+- Book a demo: https://berocker.com/demo (or https://calendly.com/berocker-info/30min)
+
+## Product
+
+- [Home — full product overview](https://berocker.com/): what BeRocker is, how the lead-to-dispatch workflow works, pricing, and FAQ
+- [Live demo booking](https://berocker.com/demo): 30-minute personalized walkthrough
+- [Sign up](https://berocker.com/sign-up): create an account, Pro plan from $199/month
+- [About the company](https://berocker.com/about-us): team, mission, and story
+
+## Core capabilities
+
+- Lead intake: leads from lead providers, the broker's own website, parsed emails, and on-site widgets arrive structured and assigned automatically
+- AI pricing: compare BeRocker AI pricing with Super Dispatch and Central Dispatch side by side before quoting
+- Omnichannel communication: SMS, phone calls with recordings and transcriptions, email, and WhatsApp Business in a single conversation timeline; brokers keep their existing phone numbers and email providers
+- Load boards: one-click posting of shipment-ready loads to Super Dispatch, Central Dispatch, or both
+- Dispatch: carrier offers, bid comparison, one-click dispatch, and tracking in one workflow
+- Analytics: pre-built KPI dashboards and reports designed for auto transport operations
+- Growth tools: professional booking website, email campaigns, e-sign contracts, customer portals
+- AI broker assistant: automated quoting, follow-ups, and 24/7 conversation handling
+
+## Blog
+
+- [Articles — guides for auto transport brokers](https://berocker.com/articles): CRM workflows, AI pricing, dispatch, and growth strategies
+
+## Legal
+
+- [Privacy policy](https://berocker.com/privacy)
+- [Terms of service](https://berocker.com/terms)

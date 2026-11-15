@@ -1,0 +1,58 @@
+# berocker.com — crawling policy
+# Search engines and AI assistants are welcome. If you are building an agent
+# that needs structured product information, start at /llms.txt.
+
+User-agent: *
+Allow: /
+Disallow: /applications
+
+# --- AI assistants & their crawlers (explicitly welcome) ---
+
+User-agent: GPTBot
+Allow: /
+Disallow: /applications
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /applications
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /applications
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /applications
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /applications
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /applications
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /applications
+
+User-agent: CCBot
+Allow: /
+Disallow: /applications
+
+Sitemap: https://berocker.com/sitemap.xml
