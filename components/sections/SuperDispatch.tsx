@@ -5,6 +5,7 @@ import { useId, useState } from "react";
 import { ArrowLeftRight, ArrowRight, Check, CircleDot, Gauge, Send, Truck } from "lucide-react";
 import { FeeNote, Heading, Placeholder, Reveal, Section, ease } from "@/components/ui";
 import { useTabs } from "@/lib/useTabs";
+import SyncFlow from "@/components/SyncFlow";
 import { SUPER_DISPATCH } from "@/lib/content";
 
 function PricingCompare() {
@@ -180,36 +181,41 @@ export default function SuperDispatch() {
         </div>
       </Reveal>
 
-      {/* What syncs, both directions */}
+      {/* What moves between BeRocker and Super Dispatch */}
       <Reveal className="mt-3">
         <Placeholder note="Confirm sync list">
-          <div className="grid items-center gap-6 rounded-[var(--radius-panel)] surface p-7 sm:p-9 lg:grid-cols-[1fr_auto_1fr]">
-            <div>
-              <p className="text-[13px] font-semibold uppercase tracking-wide text-ink-3">BeRocker sends</p>
-              <ul className="mt-2 flex flex-col">
-                {SUPER_DISPATCH.toSD.map((t) => (
-                  <li key={t} className="flex items-center gap-2.5 border-b border-line py-3 text-[15px] text-ink last:border-b-0">
-                    <ArrowRight aria-hidden="true" className="size-4 text-accent" /> {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex items-center justify-center gap-3 lg:flex-col">
-              <span className="rounded-[10px] bg-navy px-3.5 py-2 text-[13px] font-semibold text-white">BeRocker</span>
-              <span className="grid size-11 place-items-center rounded-full bg-accent-soft text-accent">
-                <ArrowLeftRight aria-hidden="true" className="size-5 lg:rotate-90" />
-              </span>
-              <span className="rounded-[10px] bg-card px-3.5 py-2 text-[13px] font-semibold text-ink shadow-quiet">Super Dispatch</span>
-            </div>
-            <div>
-              <p className="text-[13px] font-semibold uppercase tracking-wide text-ink-3">BeRocker receives</p>
-              <ul className="mt-2 flex flex-col">
-                {SUPER_DISPATCH.fromSD.map((t) => (
-                  <li key={t} className="flex items-center gap-2.5 border-b border-line py-3 text-[15px] text-ink last:border-b-0">
-                    <ArrowRight aria-hidden="true" className="size-4 rotate-180 text-accent" /> {t}
-                  </li>
-                ))}
-              </ul>
+          <div className="hidden rounded-[var(--radius-panel)] surface px-4 py-6 min-[900px]:block">
+            <SyncFlow />
+          </div>
+          <div className="min-[900px]:hidden">
+            <div className="grid items-center gap-6 rounded-[var(--radius-panel)] surface p-7 sm:p-9 lg:grid-cols-[1fr_auto_1fr]">
+              <div>
+                <p className="text-[13px] font-semibold uppercase tracking-wide text-ink-3">BeRocker sends</p>
+                <ul className="mt-2 flex flex-col">
+                  {SUPER_DISPATCH.toSD.map((t) => (
+                    <li key={t} className="flex items-center gap-2.5 border-b border-line py-3 text-[15px] text-ink last:border-b-0">
+                      <ArrowRight aria-hidden="true" className="size-4 text-accent" /> {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex items-center justify-center gap-3 lg:flex-col">
+                <span className="rounded-[10px] bg-navy px-3.5 py-2 text-[13px] font-semibold text-white">BeRocker</span>
+                <span className="grid size-11 place-items-center rounded-full bg-accent-soft text-accent">
+                  <ArrowLeftRight aria-hidden="true" className="size-5 lg:rotate-90" />
+                </span>
+                <span className="rounded-[10px] bg-card px-3.5 py-2 text-[13px] font-semibold text-ink shadow-quiet">Super Dispatch</span>
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold uppercase tracking-wide text-ink-3">BeRocker receives</p>
+                <ul className="mt-2 flex flex-col">
+                  {SUPER_DISPATCH.fromSD.map((t) => (
+                    <li key={t} className="flex items-center gap-2.5 border-b border-line py-3 text-[15px] text-ink last:border-b-0">
+                      <ArrowRight aria-hidden="true" className="size-4 rotate-180 text-accent" /> {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </Placeholder>

@@ -106,6 +106,15 @@ export const SUPER_DISPATCH = {
   ],
   // Exact sync list is not confirmed yet.
   syncPlaceholder: true,
+  // The animated map's rows. Placeholder wording: confirm against the CRM's own
+  // Super Dispatch connection map (API repo, resources/super-dispatch-connection/connection.json).
+  flow: [
+    { icon: "send", title: "Post loads", subtitle: "Vehicles, route, dates and your price", outbound: true, inbound: false },
+    { icon: "offers", title: "Carrier offers", subtitle: "Every bid lands on the lead", outbound: false, inbound: true },
+    { icon: "dispatch", title: "Dispatch", subtitle: "Accept an offer, the carrier is booked", outbound: true, inbound: true },
+    { icon: "status", title: "Pickup and delivery", subtitle: "Status updates on the shipment", outbound: false, inbound: true },
+    { icon: "cancel", title: "Unpost on dispatch", subtitle: "Booked loads come off the board", outbound: true, inbound: false },
+  ],
   toSD: ["Vehicles and route", "Pickup and delivery dates", "Your posted price"],
   fromSD: ["Carrier offers", "Dispatch status", "Pickup and delivery updates"],
 };

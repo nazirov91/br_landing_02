@@ -34,6 +34,10 @@ Without the API URL the form shows a "not connected yet" message instead of send
 - `components/sections/*`: one file per homepage section, in page order in `app/page.tsx`.
 - `components/InterferenceRibbons.jsx`: hero and closing-section WebGL background (React Bits Pro component;
   one local addition pauses it while off-screen).
+- `components/IntegrationFlow.tsx` + `SyncFlow.tsx`: the animated BeRocker <-> Super Dispatch map in the Super Dispatch
+  section. Loaded only on wide screens once the section is near (about 5 KB); phones get a plain list. Its light theme
+  reads the colour tokens. Row wording (`SUPER_DISPATCH.flow`) is a placeholder until checked against the CRM's own
+  Super Dispatch connection map.
 - `components/DemoForm.tsx` / `DemoProvider.tsx`: demo form and the modal every "Book a demo" button opens.
 - `public/`: BeRocker logos, product clips and screenshots, compliance badges.
 
