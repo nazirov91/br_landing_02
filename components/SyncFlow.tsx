@@ -34,7 +34,6 @@ const ICONS = {
 } as const;
 
 const ROWS = SUPER_DISPATCH.flow;
-const FLOWS = ROWS.reduce((n, r) => n + (r.outbound ? 1 : 0) + (r.inbound ? 1 : 0), 0);
 
 type Palette = { out: string; back: string; navy: string };
 
@@ -72,16 +71,22 @@ export default function SyncFlow() {
 
   return (
     <div className="surface rounded-[var(--radius-panel)]">
-      {/* Header strip: what the map shows, in numbers */}
+      {/* Header strip: what the map means */}
       <div className="flex flex-col gap-3 border-b border-line px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <div>
-          <p className="text-[17px] font-medium text-ink">Everything that moves between BeRocker and Super Dispatch</p>
-          <p className="mt-0.5 hidden text-[14px] text-ink-3 min-[900px]:block">Hover a row to follow its connection.</p>
+          <p className="text-[17px] font-medium text-ink">The most synchronized CRM on Super Dispatch</p>
+          <p className="mt-0.5 text-[14px] text-ink-3">
+            Fully wired, both ways. Change it in one place and the other already knows.
+            <span className="hidden min-[900px]:inline"> Hover a row to follow its connection.</span>
+          </p>
         </div>
-        <div className="flex shrink-0 gap-2 whitespace-nowrap text-[13px] font-semibold">
-          <span className="rounded-full bg-card px-3 py-1 text-ink shadow-quiet">{ROWS.length} areas</span>
-          <span className="rounded-full bg-card px-3 py-1 text-ink shadow-quiet">{FLOWS} live connections</span>
-        </div>
+        <span className="inline-flex shrink-0 items-center gap-2 self-start whitespace-nowrap rounded-full bg-card px-3 py-1 text-[13px] font-semibold text-ink shadow-quiet sm:self-center">
+          <span className="relative flex size-2" aria-hidden="true">
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60 motion-reduce:hidden" />
+            <span className="relative inline-flex size-2 rounded-full bg-success" />
+          </span>
+          Fully wired
+        </span>
       </div>
 
       {/* The wiring map, loaded on demand. Side by side on wide screens, stacked on phones. */}
