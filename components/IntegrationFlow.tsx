@@ -384,10 +384,16 @@ export default function IntegrationFlow({
   const dense = !vertical && (layout === "dense" || (layout === "auto" && boxW > 0 && boxW < compactBelow));
 
   // Dense columns, sized from the real width so phones keep the desktop shape.
+  // Phones ("tiny") keep the desktop proportions: rows under half the width, real room
+  // for the cables, smaller type, no arrow column (the coloured ports show direction).
   const innerW = Math.max(0, boxW - 8);
-  const endW = Math.round(Math.min(120, Math.max(56, innerW * 0.16)));
-  const gapMin = Math.round(Math.min(80, Math.max(18, innerW * 0.05)));
-  const rowW = Math.round(Math.max(150, Math.min(320, innerW - 2 * endW - 2 * gapMin)));
+  const tiny = dense && innerW < 520;
+  const clamp = (v: number, lo: number, hi: number) => Math.round(Math.min(hi, Math.max(lo, v)));
+  const endW = tiny ? clamp(innerW * 0.155, 50, 72) : clamp(innerW * 0.16, 56, 120);
+  const gapMin = tiny ? clamp(innerW * 0.07, 20, 40) : clamp(innerW * 0.05, 18, 80);
+  const rowW = tiny
+    ? clamp(innerW * 0.44, 132, 220)
+    : clamp(innerW - 2 * endW - 2 * gapMin, 150, 320);
 
   const [hovered, setHovered] = useState<number | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
@@ -622,7 +628,7 @@ export default function IntegrationFlow({
               position: "relative",
               borderRadius: dense ? 16.5 : 24.5,
               background: c.surface,
-              padding: vertical ? "10px 12px" : dense ? "12px 4px 10px" : "26px 16px 22px",
+              padding: vertical ? "10px 12px" : tiny ? "9px 3px 8px" : dense ? "12px 4px 10px" : "26px 16px 22px",
               display: "flex",
               flexDirection: vertical ? "row" : "column",
               alignItems: "center",
@@ -646,8 +652,8 @@ export default function IntegrationFlow({
                 style={{
                   position: "relative",
                   flex: "none",
-                  width: vertical ? 40 : dense ? 34 : 64,
-                  height: vertical ? 40 : dense ? 34 : 64,
+                  width: vertical ? 40 : tiny ? 28 : dense ? 34 : 64,
+                  height: vertical ? 40 : tiny ? 28 : dense ? 34 : 64,
                   marginBottom: vertical ? 0 : dense ? 2 : 10,
                   animation: motion ? `${float} 6s ease-in-out infinite` : undefined,
                   animationDelay: delay,
@@ -682,7 +688,7 @@ export default function IntegrationFlow({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    padding: vertical ? 7 : dense ? 6 : 12,
+                    padding: vertical ? 7 : tiny ? 5 : dense ? 6 : 12,
                     overflow: "hidden",
                   }}
                 >
@@ -703,7 +709,7 @@ export default function IntegrationFlow({
             >
               <div
                 style={{
-                  fontSize: vertical ? 15 : dense ? 11 : 16.5,
+                  fontSize: vertical ? 15 : tiny ? 9.5 : dense ? 11 : 16.5,
                   fontWeight: 650,
                   letterSpacing: dense ? "-0.01em" : "-0.015em",
                   lineHeight: dense ? 1.15 : 1.2,
@@ -876,7 +882,7 @@ export default function IntegrationFlow({
             zIndex: 1,
             display: "flex",
             flexDirection: "column",
-            gap: vertical ? Math.min(rowGap, 6) : dense ? 5 : rowGap,
+            gap: vertical ? Math.min(rowGap, 6) : tiny ? 4 : dense ? 5 : rowGap,
           }}
         >
           {items.map((it, i) => {
@@ -906,8 +912,8 @@ export default function IntegrationFlow({
                   display: "flex",
                   alignItems: "center",
                   gap: vertical ? 9 : dense ? 4 : 12,
-                  padding: vertical ? "6px 10px 6px 6px" : dense ? "6px 7px" : "9px 14px 9px 9px",
-                  borderRadius: vertical ? 12 : dense ? 10 : 15,
+                  padding: vertical ? "6px 10px 6px 6px" : tiny ? "4px 6px" : dense ? "6px 7px" : "9px 14px 9px 9px",
+                  borderRadius: vertical ? 12 : tiny ? 8 : dense ? 10 : 15,
                   background: c.card,
                   border: `1px solid ${active ? c.borderHover : c.border}`,
                   boxShadow: active ? c.shadowHover : c.shadow,
@@ -941,7 +947,7 @@ export default function IntegrationFlow({
                   <span
                     style={{
                       display: "block",
-                      fontSize: vertical ? 13.5 : dense ? 11.5 : 14.5,
+                      fontSize: vertical ? 13.5 : tiny ? 9.5 : dense ? 11.5 : 14.5,
                       fontWeight: 600,
                       letterSpacing: "-0.005em",
                       lineHeight: vertical ? 1.25 : dense ? 1.2 : 1.3,
@@ -954,7 +960,7 @@ export default function IntegrationFlow({
                       style={{
                         display: "block",
                         marginTop: vertical || dense ? 1 : 2,
-                        fontSize: vertical ? 11.5 : dense ? 10 : 12.5,
+                        fontSize: vertical ? 11.5 : tiny ? 8 : dense ? 10 : 12.5,
                         lineHeight: 1.35,
                         color: c.muted,
                         whiteSpace: "nowrap",
@@ -972,7 +978,7 @@ export default function IntegrationFlow({
                   }
                   style={{
                     flex: "none",
-                    display: "flex",
+                    display: tiny ? "none" : "flex",
                     flexDirection: "column",
                     gap: dense ? 2 : 3,
                     color: c.muted,

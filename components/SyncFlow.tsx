@@ -90,7 +90,7 @@ export default function SyncFlow() {
       </div>
 
       {/* The wiring map, loaded on demand. Side by side on wide screens, stacked on phones. */}
-      <div ref={ref} className="flex min-h-[450px] items-center py-1 sm:min-h-[430px] sm:px-2 min-[960px]:min-h-[610px] min-[960px]:py-3">
+      <div ref={ref} className="flex min-h-[362px] items-center py-1 sm:min-h-[430px] sm:px-2 min-[960px]:min-h-[610px] min-[960px]:py-3">
         {show && palette && (
           <IntegrationFlow
             theme="light"
