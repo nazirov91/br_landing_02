@@ -3,8 +3,6 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
   Banknote,
   ClipboardList,
   MessageSquareText,
@@ -18,9 +16,9 @@ import { SUPER_DISPATCH } from "@/lib/content";
 
 /*
   Everything BeRocker and Super Dispatch exchange, as a live wiring map.
-  The map's code is fetched only when the section is close to the screen and the screen
-  is wide enough for it; its space is reserved so nothing moves. Phones get the same
-  rows as a compact list instead.
+  The map's code is fetched only when the section is close to the screen, and its space
+  is reserved so nothing moves. Wide screens get it side by side; phones get the same
+  map stacked, with the cables running down both edges.
 */
 const IntegrationFlow = dynamic(() => import("@/components/IntegrationFlow"), { ssr: false });
 
@@ -50,13 +48,12 @@ export default function SyncFlow() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const wide = window.matchMedia("(min-width: 900px)");
     const css = getComputedStyle(document.documentElement);
     const v = (n: string) => css.getPropertyValue(n).trim();
     setPalette({ out: v("--color-accent"), back: v("--color-success"), navy: v("--color-navy") });
 
     let near = false;
-    const update = () => setShow((s) => s || (near && wide.matches));
+    const update = () => setShow((s) => s || near);
     const io = new IntersectionObserver(
       (entries) => {
         near = entries[0]?.isIntersecting ?? false;
@@ -67,11 +64,9 @@ export default function SyncFlow() {
     io.observe(el);
     const seen = new IntersectionObserver((entries) => setVisible(entries[0]?.isIntersecting ?? false));
     seen.observe(el);
-    wide.addEventListener("change", update);
     return () => {
       io.disconnect();
       seen.disconnect();
-      wide.removeEventListener("change", update);
     };
   }, []);
 
@@ -83,14 +78,14 @@ export default function SyncFlow() {
           <p className="text-[17px] font-medium text-ink">Everything that moves between BeRocker and Super Dispatch</p>
           <p className="mt-0.5 hidden text-[14px] text-ink-3 min-[900px]:block">Hover a row to follow its connection.</p>
         </div>
-        <div className="flex gap-2 text-[13px] font-semibold">
+        <div className="flex shrink-0 gap-2 whitespace-nowrap text-[13px] font-semibold">
           <span className="rounded-full bg-card px-3 py-1 text-ink shadow-quiet">{ROWS.length} areas</span>
           <span className="rounded-full bg-card px-3 py-1 text-ink shadow-quiet">{FLOWS} live connections</span>
         </div>
       </div>
 
-      {/* Wide screens: the wiring map, loaded on demand */}
-      <div ref={ref} className="hidden min-h-[660px] items-center px-2 py-4 min-[900px]:flex">
+      {/* The wiring map, loaded on demand. Side by side on wide screens, stacked on phones. */}
+      <div ref={ref} className="flex min-h-[640px] items-center py-1 sm:px-2 min-[960px]:min-h-[610px] min-[960px]:py-3">
         {show && palette && (
           <IntegrationFlow
             theme="light"
@@ -125,43 +120,12 @@ export default function SyncFlow() {
             inboundLabel="Super Dispatch sends"
             pulseInterval={5}
             animated={visible}
-            rowGap={10}
+            rowGap={8}
+            verticalBelow={860}
           />
         )}
       </div>
 
-      {/* Phones: the same rows as a list */}
-      <ul className="divide-y divide-line px-5 py-2 min-[900px]:hidden">
-        {ROWS.map((r) => {
-          const Icon = ICONS[r.icon as keyof typeof ICONS];
-          return (
-            <li key={r.title} className="flex items-center gap-3 py-3.5">
-              <span className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-fill text-ink-2">
-                <Icon aria-hidden="true" className="size-[18px]" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[15px] font-semibold text-ink">{r.title}</span>
-                <span className="block text-[13px] text-ink-3">{r.subtitle}</span>
-              </span>
-              <span
-                className="flex shrink-0 flex-col items-center gap-0.5"
-                aria-label={r.outbound && r.inbound ? "Both ways" : r.outbound ? "BeRocker sends" : "Super Dispatch sends"}
-              >
-                <ArrowRight aria-hidden="true" className={`size-4 ${r.outbound ? "text-accent" : "text-line-2"}`} />
-                <ArrowLeft aria-hidden="true" className={`size-4 ${r.inbound ? "text-success" : "text-line-2"}`} />
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="flex justify-center gap-5 border-t border-line px-5 py-3 text-[12px] text-ink-3 min-[900px]:hidden">
-        <span className="inline-flex items-center gap-2">
-          <span className="h-0.5 w-4 rounded-full bg-accent" /> BeRocker sends
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="h-0.5 w-4 rounded-full bg-success" /> Super Dispatch sends
-        </span>
-      </div>
     </div>
   );
 }

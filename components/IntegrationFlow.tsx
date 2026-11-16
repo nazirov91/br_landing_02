@@ -59,6 +59,13 @@ export interface IntegrationFlowProps {
   /** "auto" follows a `dark` class or data-theme="dark" on <html> */
   theme?: "auto" | "light" | "dark";
   rowGap?: number;
+  /**
+   * "horizontal": endpoints left and right (the original). "vertical": source on top,
+   * target at the bottom, cables in lanes down both sides; built for phones.
+   * "auto" (default) goes vertical when the component is narrower than `verticalBelow`.
+   */
+  layout?: "auto" | "horizontal" | "vertical";
+  verticalBelow?: number;
   className?: string;
 }
 
@@ -345,6 +352,8 @@ export default function IntegrationFlow({
   pulseLength = 140,
   theme = "auto",
   rowGap = 14,
+  layout = "auto",
+  verticalBelow = 680,
   className = "",
 }: IntegrationFlowProps) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
@@ -357,6 +366,19 @@ export default function IntegrationFlow({
   const targetRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  const [narrow, setNarrow] = useState(false);
+  useLayoutEffect(() => {
+    const el = rootRef.current;
+    if (layout !== "auto" || !el) return;
+    const read = () => setNarrow(el.clientWidth < verticalBelow);
+    read();
+    const ro = new ResizeObserver(read);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [layout, verticalBelow]);
+  const vertical = layout === "vertical" || (layout === "auto" && narrow);
 
   const [hovered, setHovered] = useState<number | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
@@ -374,7 +396,7 @@ export default function IntegrationFlow({
     const o = wrap.getBoundingClientRect();
     const rel = (el: Element) => {
       const r = el.getBoundingClientRect();
-      return { l: r.left - o.left, r: r.right - o.left, t: r.top - o.top, h: r.height };
+      return { l: r.left - o.left, r: r.right - o.left, t: r.top - o.top, b: r.bottom - o.top, h: r.height };
     };
     const s = rel(src);
     const t = rel(tgt);
@@ -387,6 +409,47 @@ export default function IntegrationFlow({
     });
 
     const n = defs.length;
+
+    if (vertical) {
+      // Lanes down the left edge (source -> rows) and the right edge (rows -> target).
+      // The first row takes the inner left lane and the outer right lane, so no cables cross.
+      const list = listRef.current;
+      if (!list) return;
+      const L = rel(list);
+      const lIn = L.l - 5;
+      const lOut = s.l + 4;
+      const rOut = t.r - 4;
+      const rIn = L.r + 5;
+      const stepL = n > 1 ? Math.min(3, (lIn - lOut) / (n - 1)) : 0;
+      const stepR = n > 1 ? Math.min(3, (rOut - rIn) / (n - 1)) : 0;
+      const nextV: Line[] = [];
+      defs.forEach((def, k) => {
+        const el = rowRefs.current[def.item];
+        if (!el) return;
+        const r = rel(el);
+        const both = flags[def.item].out && flags[def.item].inn;
+        const y = r.t + r.h / 2 + (both ? (def.dir === "out" ? -5 : 5) : 0);
+        const xl = lIn - k * stepL;
+        const xr = rOut - k * stepR;
+        const a: Curve = [{ x: xl, y: s.b }, { x: xl, y }, { x: xl, y }, { x: r.l, y }];
+        const b: Curve = [{ x: r.r, y }, { x: xr, y }, { x: xr, y }, { x: xr, y: t.t }];
+        const out = def.dir === "out";
+        nextV.push({
+          key: `${def.item}-${def.dir}`,
+          item: def.item,
+          dir: def.dir,
+          color: out ? outboundColor : inboundColor,
+          dA: pathD(a),
+          dB: pathD(b),
+          // Only the row ports: fourteen dots at each end would crowd a phone screen.
+          ports: [a[3], a[3], b[0], b[0]],
+          segs: out ? [makeSeg(a, false), makeSeg(b, false)] : [makeSeg(b, true), makeSeg(a, true)],
+        });
+      });
+      setLines(nextV);
+      return;
+    }
+
     const fan = (box: { t: number; h: number }, k: number) => {
       const spacing = n > 1 ? Math.min(9, (box.h * 0.62) / (n - 1)) : 0;
       return box.t + box.h / 2 + (k - (n - 1) / 2) * spacing;
@@ -414,7 +477,7 @@ export default function IntegrationFlow({
       });
     });
     setLines(next);
-  }, [shape, outboundColor, inboundColor]);
+  }, [shape, outboundColor, inboundColor, vertical]);
 
   useLayoutEffect(() => {
     measure();
@@ -500,10 +563,10 @@ export default function IntegrationFlow({
       <div
         ref={ref}
         style={{
-          gridColumn: column,
+          gridColumn: vertical ? undefined : column,
           position: "relative",
           zIndex: 1,
-          alignSelf: "center",
+          alignSelf: vertical ? "stretch" : "center",
           borderRadius: 26,
         }}
       >
@@ -513,6 +576,7 @@ export default function IntegrationFlow({
           style={{
             position: "absolute",
             inset: -34,
+            display: vertical ? "none" : undefined,
             borderRadius: "50%",
             background: `radial-gradient(closest-side, ${rgba(accent, c.halo)}, ${rgba(accent, 0)})`,
             filter: "blur(10px)",
@@ -549,12 +613,12 @@ export default function IntegrationFlow({
               position: "relative",
               borderRadius: 24.5,
               background: c.surface,
-              padding: "26px 16px 22px",
+              padding: vertical ? "10px 12px" : "26px 16px 22px",
               display: "flex",
-              flexDirection: "column",
+              flexDirection: vertical ? "row" : "column",
               alignItems: "center",
-              textAlign: "center",
-              gap: 6,
+              textAlign: vertical ? "left" : "center",
+              gap: vertical ? 12 : 6,
               overflow: "hidden",
             }}
           >
@@ -572,9 +636,10 @@ export default function IntegrationFlow({
               <div
                 style={{
                   position: "relative",
-                  width: 64,
-                  height: 64,
-                  marginBottom: 10,
+                  flex: "none",
+                  width: vertical ? 40 : 64,
+                  height: vertical ? 40 : 64,
+                  marginBottom: vertical ? 0 : 10,
                   animation: motion ? `${float} 6s ease-in-out infinite` : undefined,
                   animationDelay: delay,
                 }}
@@ -608,7 +673,7 @@ export default function IntegrationFlow({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    padding: 12,
+                    padding: vertical ? 7 : 12,
                     overflow: "hidden",
                   }}
                 >
@@ -619,24 +684,34 @@ export default function IntegrationFlow({
             <div
               style={{
                 position: "relative",
-                fontSize: 16.5,
-                fontWeight: 650,
-                letterSpacing: "-0.015em",
-                lineHeight: 1.2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: vertical ? "flex-start" : "center",
+                gap: vertical ? 2 : 6,
+                flex: vertical ? 1 : undefined,
+                minWidth: 0,
               }}
             >
-              {ep.title}
-            </div>
-            {ep.subtitle && (
-              <div style={{ position: "relative", fontSize: 12.5, lineHeight: 1.4, color: c.muted }}>
-                {ep.subtitle}
+              <div
+                style={{
+                  fontSize: vertical ? 15 : 16.5,
+                  fontWeight: 650,
+                  letterSpacing: "-0.015em",
+                  lineHeight: 1.2,
+                }}
+              >
+                {ep.title}
               </div>
-            )}
+              {ep.subtitle && (
+                <div style={{ fontSize: 12.5, lineHeight: 1.4, color: c.muted }}>{ep.subtitle}</div>
+              )}
+            </div>
             {ep.status && (
               <div
                 style={{
                   position: "relative",
-                  marginTop: 6,
+                  flex: "none",
+                  marginTop: vertical ? 0 : 6,
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 7,
@@ -714,7 +789,7 @@ export default function IntegrationFlow({
   );
 
   return (
-    <div className={className} style={{ color: c.text, fontFamily: "inherit", width: "100%" }}>
+    <div ref={rootRef} className={className} style={{ color: c.text, fontFamily: "inherit", width: "100%" }}>
       <style>{`
         @keyframes ${spin} { to { transform: rotate(360deg); } }
         @keyframes ${ping} { 0% { transform: scale(1); opacity: 0.6; } 80%, 100% { transform: scale(1.55); opacity: 0; } }
@@ -723,14 +798,18 @@ export default function IntegrationFlow({
 
       <div
         ref={wrapRef}
-        style={{
-          position: "relative",
-          display: "grid",
-          gridTemplateColumns:
-            "minmax(130px, 200px) minmax(48px, 1fr) minmax(240px, 370px) minmax(48px, 1fr) minmax(130px, 200px)",
-          alignItems: "center",
-          padding: "34px",
-        }}
+        style={
+          vertical
+            ? { position: "relative", display: "flex", flexDirection: "column", gap: 18, padding: "12px 10px 16px" }
+            : {
+                position: "relative",
+                display: "grid",
+                gridTemplateColumns:
+                  "minmax(130px, 200px) minmax(48px, 1fr) minmax(240px, 370px) minmax(48px, 1fr) minmax(130px, 200px)",
+                alignItems: "center",
+                padding: "34px",
+              }
+        }
       >
         {/* lines + pulses, behind the cards */}
         <svg aria-hidden style={svgBase}>
@@ -772,12 +851,13 @@ export default function IntegrationFlow({
         <div
           ref={listRef}
           style={{
-            gridColumn: 3,
+            gridColumn: vertical ? undefined : 3,
+            margin: vertical ? "0 22px" : undefined,
             position: "relative",
             zIndex: 1,
             display: "flex",
             flexDirection: "column",
-            gap: rowGap,
+            gap: vertical ? Math.min(rowGap, 6) : rowGap,
           }}
         >
           {items.map((it, i) => {
@@ -806,9 +886,9 @@ export default function IntegrationFlow({
                   width: "100%",
                   display: "flex",
                   alignItems: "center",
-                  gap: 12,
-                  padding: "10px 14px 10px 10px",
-                  borderRadius: 15,
+                  gap: vertical ? 9 : 12,
+                  padding: vertical ? "6px 10px 6px 6px" : "9px 14px 9px 9px",
+                  borderRadius: vertical ? 12 : 15,
                   background: c.card,
                   border: `1px solid ${active ? c.borderHover : c.border}`,
                   boxShadow: active ? c.shadowHover : c.shadow,
@@ -823,9 +903,9 @@ export default function IntegrationFlow({
                   <span
                     style={{
                       flex: "none",
-                      width: 38,
-                      height: 38,
-                      borderRadius: 11,
+                      width: vertical ? 30 : 36,
+                      height: vertical ? 30 : 36,
+                      borderRadius: vertical ? 9 : 11,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -842,10 +922,10 @@ export default function IntegrationFlow({
                   <span
                     style={{
                       display: "block",
-                      fontSize: 14.5,
+                      fontSize: vertical ? 13.5 : 14.5,
                       fontWeight: 600,
                       letterSpacing: "-0.005em",
-                      lineHeight: 1.3,
+                      lineHeight: vertical ? 1.25 : 1.3,
                     }}
                   >
                     {it.title}
@@ -854,8 +934,8 @@ export default function IntegrationFlow({
                     <span
                       style={{
                         display: "block",
-                        marginTop: 2,
-                        fontSize: 12.5,
+                        marginTop: vertical ? 1 : 2,
+                        fontSize: vertical ? 11.5 : 12.5,
                         lineHeight: 1.35,
                         color: c.muted,
                         whiteSpace: "nowrap",
