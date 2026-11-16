@@ -104,19 +104,17 @@ export const SUPER_DISPATCH = {
       body: "Carrier offers roll in, you compare bids and dispatch the winner with one click. Tracking stays on the same shipment.",
     },
   ],
-  // Exact sync list is not confirmed yet.
-  syncPlaceholder: true,
-  // The animated map's rows. Placeholder wording: confirm against the CRM's own
-  // Super Dispatch connection map (API repo, resources/super-dispatch-connection/connection.json).
+  // Every area BeRocker and Super Dispatch exchange data in, and which way it flows.
   flow: [
-    { icon: "send", title: "Post loads", subtitle: "Vehicles, route, dates and your price", outbound: true, inbound: false },
-    { icon: "offers", title: "Carrier offers", subtitle: "Every bid lands on the lead", outbound: false, inbound: true },
-    { icon: "dispatch", title: "Dispatch", subtitle: "Accept an offer, the carrier is booked", outbound: true, inbound: true },
-    { icon: "status", title: "Pickup and delivery", subtitle: "Status updates on the shipment", outbound: false, inbound: true },
-    { icon: "cancel", title: "Unpost on dispatch", subtitle: "Booked loads come off the board", outbound: true, inbound: false },
+    { icon: "loads", title: "Loads and posting", subtitle: "Create, post, update, remove", outbound: true, inbound: true },
+    { icon: "offers", title: "Offers and carrier requests", subtitle: "Send offers, answer requests", outbound: true, inbound: true },
+    { icon: "dispatch", title: "Dispatch, pickup, delivery", subtitle: "Tracking and paperwork", outbound: true, inbound: true },
+    { icon: "pricing", title: "Pricing", subtitle: "Recommended price, price changes", outbound: true, inbound: true },
+    { icon: "carriers", title: "Carriers", subtitle: "Search, profiles, documents", outbound: true, inbound: false },
+    { icon: "orders", title: "Orders made in Super Dispatch", subtitle: "New orders, customers, terminals", outbound: true, inbound: true },
+    { icon: "money", title: "Money", subtitle: "Carrier paid, reversed, on hold", outbound: false, inbound: true },
+    { icon: "checks", title: "Background checks", subtitle: "Re-checks, missed updates, sync now", outbound: true, inbound: true },
   ],
-  toSD: ["Vehicles and route", "Pickup and delivery dates", "Your posted price"],
-  fromSD: ["Carrier offers", "Dispatch status", "Pickup and delivery updates"],
 };
 
 export type WorkflowStep = {

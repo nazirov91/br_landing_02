@@ -36,15 +36,13 @@ Without the API URL the form shows a "not connected yet" message instead of send
   one local addition pauses it while off-screen).
 - `components/IntegrationFlow.tsx` + `SyncFlow.tsx`: the animated BeRocker <-> Super Dispatch map in the Super Dispatch
   section. Loaded only on wide screens once the section is near (about 5 KB); phones get a plain list. Its light theme
-  reads the colour tokens. Row wording (`SUPER_DISPATCH.flow`) is a placeholder until checked against the CRM's own
-  Super Dispatch connection map.
+  reads the colour tokens. Rows (`SUPER_DISPATCH.flow`) are the eight areas of the CRM's Super Dispatch connection; pulses pause off-screen.
 - `components/DemoForm.tsx` / `DemoProvider.tsx`: demo form and the modal every "Book a demo" button opens.
 - `public/`: BeRocker logos, product clips and screenshots, compliance badges.
 
 ## Placeholders still to fill
 
 1. Two customer quotes (proof strip, support section)
-2. Exact Super Dispatch sync list
 3. Accounting integrations
 4. FAQ: Super Dispatch requirements, contract terms, usage charges
 5. Confirmation of "the only auto transport CRM with MCP support"
