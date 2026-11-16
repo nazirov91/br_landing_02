@@ -40,9 +40,9 @@ export default function SiteHeader() {
         scrolled || open ? "shadow-[0_1px_0_var(--color-line)]" : ""
       }`}
     >
-      <Container className="flex h-[72px] items-center gap-8">
+      <Container className="flex h-[72px] items-center gap-4 sm:gap-8">
         <a href="#top" className="flex shrink-0 items-center rounded-md" aria-label="BeRocker, back to top">
-          <Logo className="h-[30px] w-auto" />
+          <Logo className="h-[26px] w-auto sm:h-[30px]" />
         </a>
 
         <nav aria-label="Main" className="hidden items-center gap-1 min-[901px]:flex">
@@ -64,7 +64,7 @@ export default function SiteHeader() {
           >
             Sign in
           </a>
-          <button type="button" onClick={() => openDemo({ source: "header" })} className={buttonClass("primary", "md", "h-10 px-4")}>
+          <button type="button" onClick={() => openDemo({ source: "header" })} className={buttonClass("primary", "md", "h-10 px-3.5 text-[14px] sm:px-4 sm:text-[15px]")}>
             Book a demo
           </button>
           <button

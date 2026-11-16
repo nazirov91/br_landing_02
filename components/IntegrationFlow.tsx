@@ -60,12 +60,14 @@ export interface IntegrationFlowProps {
   theme?: "auto" | "light" | "dark";
   rowGap?: number;
   /**
-   * "horizontal": endpoints left and right (the original). "vertical": source on top,
-   * target at the bottom, cables in lanes down both sides; built for phones.
-   * "auto" (default) goes vertical when the component is narrower than `verticalBelow`.
+   * "horizontal": endpoints left and right at full size (the original).
+   * "dense": the same side-by-side map scaled down for small screens: slim endpoint
+   * columns, narrower rows without icons, thinner cables. Column widths follow the width.
+   * "vertical": source on top, target at the bottom, cables in lanes down both sides.
+   * "auto" (default) uses "dense" when the component is narrower than `compactBelow`.
    */
-  layout?: "auto" | "horizontal" | "vertical";
-  verticalBelow?: number;
+  layout?: "auto" | "horizontal" | "dense" | "vertical";
+  compactBelow?: number;
   className?: string;
 }
 
@@ -353,7 +355,7 @@ export default function IntegrationFlow({
   theme = "auto",
   rowGap = 14,
   layout = "auto",
-  verticalBelow = 680,
+  compactBelow = 860,
   className = "",
 }: IntegrationFlowProps) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
@@ -368,17 +370,24 @@ export default function IntegrationFlow({
   const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const [narrow, setNarrow] = useState(false);
+  const [boxW, setBoxW] = useState(0);
   useLayoutEffect(() => {
     const el = rootRef.current;
-    if (layout !== "auto" || !el) return;
-    const read = () => setNarrow(el.clientWidth < verticalBelow);
+    if (!el) return;
+    const read = () => setBoxW(el.clientWidth);
     read();
     const ro = new ResizeObserver(read);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [layout, verticalBelow]);
-  const vertical = layout === "vertical" || (layout === "auto" && narrow);
+  }, []);
+  const vertical = layout === "vertical";
+  const dense = !vertical && (layout === "dense" || (layout === "auto" && boxW > 0 && boxW < compactBelow));
+
+  // Dense columns, sized from the real width so phones keep the desktop shape.
+  const innerW = Math.max(0, boxW - 8);
+  const endW = Math.round(Math.min(120, Math.max(56, innerW * 0.16)));
+  const gapMin = Math.round(Math.min(80, Math.max(18, innerW * 0.05)));
+  const rowW = Math.round(Math.max(150, Math.min(320, innerW - 2 * endW - 2 * gapMin)));
 
   const [hovered, setHovered] = useState<number | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
@@ -477,7 +486,7 @@ export default function IntegrationFlow({
       });
     });
     setLines(next);
-  }, [shape, outboundColor, inboundColor, vertical]);
+  }, [shape, outboundColor, inboundColor, vertical, dense]);
 
   useLayoutEffect(() => {
     measure();
@@ -567,7 +576,7 @@ export default function IntegrationFlow({
           position: "relative",
           zIndex: 1,
           alignSelf: vertical ? "stretch" : "center",
-          borderRadius: 26,
+          borderRadius: dense ? 18 : 26,
         }}
       >
         {/* soft halo behind the node */}
@@ -576,7 +585,7 @@ export default function IntegrationFlow({
           style={{
             position: "absolute",
             inset: -34,
-            display: vertical ? "none" : undefined,
+            display: vertical || dense ? "none" : undefined,
             borderRadius: "50%",
             background: `radial-gradient(closest-side, ${rgba(accent, c.halo)}, ${rgba(accent, 0)})`,
             filter: "blur(10px)",
@@ -587,7 +596,7 @@ export default function IntegrationFlow({
         <div
           style={{
             position: "relative",
-            borderRadius: 26,
+            borderRadius: dense ? 18 : 26,
             padding: 1.5,
             overflow: "hidden",
             background: c.frame,
@@ -611,14 +620,14 @@ export default function IntegrationFlow({
           <div
             style={{
               position: "relative",
-              borderRadius: 24.5,
+              borderRadius: dense ? 16.5 : 24.5,
               background: c.surface,
-              padding: vertical ? "10px 12px" : "26px 16px 22px",
+              padding: vertical ? "10px 12px" : dense ? "12px 4px 10px" : "26px 16px 22px",
               display: "flex",
               flexDirection: vertical ? "row" : "column",
               alignItems: "center",
               textAlign: vertical ? "left" : "center",
-              gap: vertical ? 12 : 6,
+              gap: vertical ? 12 : dense ? 5 : 6,
               overflow: "hidden",
             }}
           >
@@ -637,9 +646,9 @@ export default function IntegrationFlow({
                 style={{
                   position: "relative",
                   flex: "none",
-                  width: vertical ? 40 : 64,
-                  height: vertical ? 40 : 64,
-                  marginBottom: vertical ? 0 : 10,
+                  width: vertical ? 40 : dense ? 34 : 64,
+                  height: vertical ? 40 : dense ? 34 : 64,
+                  marginBottom: vertical ? 0 : dense ? 2 : 10,
                   animation: motion ? `${float} 6s ease-in-out infinite` : undefined,
                   animationDelay: delay,
                 }}
@@ -652,7 +661,7 @@ export default function IntegrationFlow({
                       style={{
                         position: "absolute",
                         inset: 0,
-                        borderRadius: 20,
+                        borderRadius: dense ? 11 : 20,
                         border: `1.5px solid ${rgba(accent, 0.55)}`,
                         animation: `${ping} 3.2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite`,
                         animationDelay: `${k * 1.6}s`,
@@ -666,14 +675,14 @@ export default function IntegrationFlow({
                     width: "100%",
                     height: "100%",
                     boxSizing: "border-box",
-                    borderRadius: 20,
+                    borderRadius: dense ? 11 : 20,
                     background: ep.logoBackground ?? c.tile,
                     border: `1px solid ${c.tileBorder}`,
                     boxShadow: `0 10px 24px -8px ${rgba(accent, 0.55)}, inset 0 1px 0 rgba(255,255,255,${dark ? 0.08 : 0.9})`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    padding: vertical ? 7 : 12,
+                    padding: vertical ? 7 : dense ? 6 : 12,
                     overflow: "hidden",
                   }}
                 >
@@ -694,28 +703,30 @@ export default function IntegrationFlow({
             >
               <div
                 style={{
-                  fontSize: vertical ? 15 : 16.5,
+                  fontSize: vertical ? 15 : dense ? 11 : 16.5,
                   fontWeight: 650,
-                  letterSpacing: "-0.015em",
-                  lineHeight: 1.2,
+                  letterSpacing: dense ? "-0.01em" : "-0.015em",
+                  lineHeight: dense ? 1.15 : 1.2,
                 }}
               >
                 {ep.title}
               </div>
-              {ep.subtitle && (
+              {ep.subtitle && !dense && (
                 <div style={{ fontSize: 12.5, lineHeight: 1.4, color: c.muted }}>{ep.subtitle}</div>
               )}
             </div>
             {ep.status && (
               <div
+                role={dense ? "img" : undefined}
+                aria-label={dense ? ep.status : undefined}
                 style={{
                   position: "relative",
                   flex: "none",
-                  marginTop: vertical ? 0 : 6,
+                  marginTop: vertical ? 0 : dense ? 1 : 6,
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 7,
-                  padding: "4px 10px 4px 9px",
+                  gap: dense ? 0 : 7,
+                  padding: dense ? 4 : "4px 10px 4px 9px",
                   borderRadius: 999,
                   fontSize: 12,
                   fontWeight: 600,
@@ -745,7 +756,7 @@ export default function IntegrationFlow({
                     }}
                   />
                 </span>
-                {ep.status}
+                {!dense && ep.status}
               </div>
             )}
           </div>
@@ -766,8 +777,8 @@ export default function IntegrationFlow({
 
   const arrow = (color: string, flip: boolean, on: boolean) => (
     <svg
-      width="18"
-      height="12"
+      width={dense ? 12 : 18}
+      height={dense ? 8 : 12}
       viewBox="0 0 18 12"
       fill="none"
       aria-hidden
@@ -801,6 +812,14 @@ export default function IntegrationFlow({
         style={
           vertical
             ? { position: "relative", display: "flex", flexDirection: "column", gap: 18, padding: "12px 10px 16px" }
+            : dense
+            ? {
+                position: "relative",
+                display: "grid",
+                gridTemplateColumns: `${endW}px minmax(${gapMin}px, 1fr) ${rowW}px minmax(${gapMin}px, 1fr) ${endW}px`,
+                alignItems: "center",
+                padding: "14px 4px",
+              }
             : {
                 position: "relative",
                 display: "grid",
@@ -824,7 +843,7 @@ export default function IntegrationFlow({
               fill="none"
               stroke={l.color}
               strokeLinecap="round"
-              strokeWidth={hovered === l.item ? 1.75 : 1.25}
+              strokeWidth={dense ? (hovered === l.item ? 1.4 : 1) : hovered === l.item ? 1.75 : 1.25}
               strokeDasharray={lineStyle === "dashed" ? "3 5" : undefined}
               opacity={lineOpacity(l.item)}
               style={{ transition: "opacity 200ms, stroke-width 200ms" }}
@@ -838,8 +857,8 @@ export default function IntegrationFlow({
               uid={uid}
               lines={lines}
               interval={pulseInterval}
-              speed={pulseSpeed}
-              length={pulseLength}
+              speed={dense ? pulseSpeed * 0.7 : pulseSpeed}
+              length={dense ? Math.round(pulseLength * 0.45) : pulseLength}
               hovered={hovered}
               onArrive={onArrive}
             />
@@ -857,7 +876,7 @@ export default function IntegrationFlow({
             zIndex: 1,
             display: "flex",
             flexDirection: "column",
-            gap: vertical ? Math.min(rowGap, 6) : rowGap,
+            gap: vertical ? Math.min(rowGap, 6) : dense ? 5 : rowGap,
           }}
         >
           {items.map((it, i) => {
@@ -886,9 +905,9 @@ export default function IntegrationFlow({
                   width: "100%",
                   display: "flex",
                   alignItems: "center",
-                  gap: vertical ? 9 : 12,
-                  padding: vertical ? "6px 10px 6px 6px" : "9px 14px 9px 9px",
-                  borderRadius: vertical ? 12 : 15,
+                  gap: vertical ? 9 : dense ? 4 : 12,
+                  padding: vertical ? "6px 10px 6px 6px" : dense ? "6px 7px" : "9px 14px 9px 9px",
+                  borderRadius: vertical ? 12 : dense ? 10 : 15,
                   background: c.card,
                   border: `1px solid ${active ? c.borderHover : c.border}`,
                   boxShadow: active ? c.shadowHover : c.shadow,
@@ -899,7 +918,7 @@ export default function IntegrationFlow({
                   color: c.text,
                 }}
               >
-                {it.icon && (
+                {it.icon && !dense && (
                   <span
                     style={{
                       flex: "none",
@@ -918,14 +937,14 @@ export default function IntegrationFlow({
                     {it.icon}
                   </span>
                 )}
-                <span style={{ flex: 1, minWidth: 0, paddingLeft: it.icon ? 0 : 4 }}>
+                <span style={{ flex: 1, minWidth: 0, paddingLeft: it.icon && !dense ? 0 : dense ? 1 : 4 }}>
                   <span
                     style={{
                       display: "block",
-                      fontSize: vertical ? 13.5 : 14.5,
+                      fontSize: vertical ? 13.5 : dense ? 11.5 : 14.5,
                       fontWeight: 600,
                       letterSpacing: "-0.005em",
-                      lineHeight: vertical ? 1.25 : 1.3,
+                      lineHeight: vertical ? 1.25 : dense ? 1.2 : 1.3,
                     }}
                   >
                     {it.title}
@@ -934,8 +953,8 @@ export default function IntegrationFlow({
                     <span
                       style={{
                         display: "block",
-                        marginTop: vertical ? 1 : 2,
-                        fontSize: vertical ? 11.5 : 12.5,
+                        marginTop: vertical || dense ? 1 : 2,
+                        fontSize: vertical ? 11.5 : dense ? 10 : 12.5,
                         lineHeight: 1.35,
                         color: c.muted,
                         whiteSpace: "nowrap",
@@ -955,7 +974,7 @@ export default function IntegrationFlow({
                     flex: "none",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 3,
+                    gap: dense ? 2 : 3,
                     color: c.muted,
                   }}
                 >
@@ -982,7 +1001,7 @@ export default function IntegrationFlow({
                 style={{ transition: "opacity 200ms", fill: c.cardSolid }}
               >
                 {l.ports.map((pt, k) => (
-                  <circle key={k} cx={pt.x} cy={pt.y} r={hovered === l.item ? 3.5 : 2.75} />
+                  <circle key={k} cx={pt.x} cy={pt.y} r={dense ? (hovered === l.item ? 2.4 : 1.7) : hovered === l.item ? 3.5 : 2.75} />
                 ))}
               </g>
             );
