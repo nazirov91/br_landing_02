@@ -8,7 +8,7 @@ const ICONS = [DatabaseZap, PlugZap, Headset];
 export default function Support() {
   return (
     <Section id="support" labelledBy="support-title" tone="white">
-      <Heading id="support-title" title={SUPPORT.title} sub={SUPPORT.lede} />
+      <Heading id="support-title" eyebrow={SUPPORT.eyebrow} title={SUPPORT.title} sub={SUPPORT.lede} />
 
       <Reveal className="well mt-12 flex min-h-[360px] items-center justify-center p-6 pb-24 sm:p-10 sm:pb-32 lg:min-h-[440px] lg:justify-end lg:pb-10 lg:pr-20">
         {/* Onboarding checklist, the way a new brokerage sees it */}
@@ -66,11 +66,6 @@ export default function Support() {
                 </IconChip>
                 <h3 className="mt-4 text-[17px] font-medium text-ink">{p.title}</h3>
                 <p className="mt-1.5 text-[15px] leading-6 text-ink-3">{p.body}</p>
-                {p.placeholderNote && (
-                  <Placeholder note="Placeholder" className="mt-4">
-                    <p className="rounded-[10px] surface px-3 py-2 text-[13px] text-ink-3">{p.placeholderNote}.</p>
-                  </Placeholder>
-                )}
               </Reveal>
             );
           })}

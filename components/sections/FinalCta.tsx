@@ -1,7 +1,7 @@
 import { CalendarCheck, Clock, Headset } from "lucide-react";
 import Ribbons from "@/components/Ribbons";
 import DemoForm from "@/components/DemoForm";
-import { ButtonLink, Container, Reveal } from "@/components/ui";
+import { ButtonLink, Container, Eyebrow, Reveal } from "@/components/ui";
 import { FINAL_CTA, SITE } from "@/lib/content";
 
 export default function FinalCta() {
@@ -12,6 +12,7 @@ export default function FinalCta() {
           <Ribbons angle={-12} amplitude={0.45} ribbonWidth={0.2} wires={48} glow={0.4} intensity={0.7} speed={0.35} spin={0.25} clickPulse={false} quality={0.7} />
           <div className="relative">
             <Reveal>
+              <Eyebrow dark>{FINAL_CTA.eyebrow}</Eyebrow>
               <h2 id="demo-title" className="text-balance text-[2.2rem] font-medium leading-[1.08] tracking-[-0.03em] text-white sm:text-[3rem]">
                 {FINAL_CTA.title}
               </h2>

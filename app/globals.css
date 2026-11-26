@@ -165,3 +165,195 @@
     radial-gradient(60% 50% at 85% 0%, color-mix(in oklab, var(--color-accent) 30%, transparent), transparent 70%),
     radial-gradient(50% 45% at 0% 100%, color-mix(in oklab, var(--color-accent) 16%, transparent), transparent 70%);
 }
+
+/*
+  Hero: an isometric BeRocker core on a floor grid that opens into its modules.
+  Adapted from the Syntra hero; every colour comes from the tokens above.
+*/
+.sh-hero {
+  min-height: calc(100dvh - var(--nav-space, 72px));
+}
+@media (max-width: 1023px) {
+  .sh-hero {
+    min-height: 0;
+  }
+}
+.sh-h1 {
+  font-size: clamp(2.4rem, 0.9rem + 3vw, 3.9rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+.sh-bg {
+  background:
+    radial-gradient(ellipse 60% 70% at 74% 52%, color-mix(in oklab, var(--color-white) 95%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 45% at 78% 58%, color-mix(in oklab, var(--color-accent) 9%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, color-mix(in oklab, var(--color-page-2) 85%, transparent) 0%, transparent 70%),
+    var(--color-page);
+}
+.sh-halo {
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--color-white) 90%, transparent), transparent);
+}
+.sh-floor,
+.sh-floor-lit {
+  --sh-floor-area: radial-gradient(ellipse 75% 80% at 72% 70%, #000 20%, transparent 100%);
+  --sh-floor-edges: linear-gradient(to left, transparent 0%, #000 22%), linear-gradient(to top, transparent 0%, #000 28%);
+  -webkit-mask-image: var(--sh-floor-area), var(--sh-floor-edges);
+  mask-image: var(--sh-floor-area), var(--sh-floor-edges);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+.sh-floor {
+  opacity: 0.5;
+}
+.sh-floor-spot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  will-change: transform, opacity;
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 0%, transparent 100%);
+}
+.sh-floor-lit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+[data-spot="on"] > .sh-floor-spot {
+  opacity: 0.6;
+}
+@media (max-width: 1023px) {
+  .sh-floor,
+  .sh-floor-lit {
+    --sh-floor-area: radial-gradient(ellipse 90% 60% at 50% 75%, #000 20%, transparent 100%);
+  }
+}
+.sh-fade-edge {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 14%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 14%);
+}
+@media (max-width: 1023px) {
+  .sh-fade-edge {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+.sh-dot {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent) 16%, transparent);
+}
+
+/* Button labels turn over like a small cube on hover. */
+.sh-flip {
+  perspective: 600px;
+}
+.sh-flip-box {
+  --d: 0.75em;
+  display: inline-grid;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--d) * -1)) rotateX(0deg);
+  transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sh-flip-face {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  height: 1.5em;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.5em;
+  backface-visibility: hidden;
+  transform: translateZ(var(--d));
+}
+.sh-flip-back {
+  transform: rotateX(-90deg) translateZ(var(--d));
+}
+.sh-flip:hover .sh-flip-box,
+.sh-flip:focus-visible .sh-flip-box {
+  transform: translateZ(calc(var(--d) * -1)) rotateX(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh-flip:hover .sh-flip-box,
+  .sh-flip:focus-visible .sh-flip-box {
+    transform: translateZ(calc(var(--d) * -1));
+  }
+}
+
+/* Entrances run in CSS, so the copy paints before the JavaScript arrives. */
+.sh-rise {
+  animation: sh-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.sh-enter {
+  animation: sh-enter 1100ms cubic-bezier(0.22, 1, 0.36, 1) 250ms backwards;
+}
+@keyframes sh-rise {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+}
+@keyframes sh-enter {
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+}
+@keyframes sh-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(var(--sh-float, 10) * -1px));
+  }
+}
+.sh-float {
+  animation: sh-float 6.5s ease-in-out infinite alternate;
+}
+@keyframes sh-seam {
+  from {
+    opacity: 0.78;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sh-seam-pulse {
+  animation: sh-seam 4.8s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh-rise,
+  .sh-enter,
+  .sh-float,
+  .sh-seam-pulse {
+    animation: none;
+  }
+}
+
+/* Module cards: light glass that hides the lines behind the type. */
+.sh-stage-card {
+  border: 1px solid color-mix(in oklab, var(--color-ink) 7%, transparent);
+  border-radius: 1.1em;
+  background: color-mix(in oklab, var(--color-white) 86%, transparent);
+  box-shadow:
+    0 1px 2px color-mix(in oklab, var(--color-ink) 5%, transparent),
+    0 14px 34px -18px color-mix(in oklab, var(--color-ink) 30%, transparent),
+    inset 0 1px 0 color-mix(in oklab, var(--color-white) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease;
+}
+.sh-stage-card-lit {
+  border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+  box-shadow:
+    0 1px 2px color-mix(in oklab, var(--color-ink) 5%, transparent),
+    0 18px 38px -18px color-mix(in oklab, var(--color-accent) 45%, transparent),
+    inset 0 1px 0 color-mix(in oklab, var(--color-white) 90%, transparent);
+}
+@container (max-width: 640px) {
+  .sh-stage-apps {
+    display: none;
+  }
+}

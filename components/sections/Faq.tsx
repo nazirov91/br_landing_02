@@ -16,7 +16,7 @@ export default function Faq() {
     <Section id="faq" labelledBy="faq-title" tone="white">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
         <div>
-          <Heading id="faq-title" title="Before you make the switch." />
+          <Heading id="faq-title" eyebrow="A few things worth knowing" title="Before you make the move." />
           <Reveal delay={0.08} className="mt-8 max-w-[420px]">
             <div className="rounded-[var(--radius-card)] surface p-6">
               <div className="flex items-start gap-4">

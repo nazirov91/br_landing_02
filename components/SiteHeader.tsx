@@ -1,18 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { NAV, SITE } from "@/lib/content";
-import { Container, Logo, buttonClass, ease } from "@/components/ui";
+import { Container, FlipLabel, Logo, buttonClass, ease } from "@/components/ui";
 import { useDemo } from "@/components/DemoProvider";
 
-/* Hourline's header: sticky on the page colour, a hairline appears once the page scrolls. */
+/*
+  Sticky header. Clear over the hero, then a blurred page-colour bar with a hairline once the
+  page scrolls. It publishes its height (plus the bar above it) as --nav-space, so the hero
+  fills exactly what is left of the first screen.
+*/
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
   const { openDemo } = useDemo();
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      const bar = document.getElementById("announcement");
+      const h = el.getBoundingClientRect().height + (bar?.getBoundingClientRect().height ?? 0);
+      document.documentElement.style.setProperty("--nav-space", `${h}px`);
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    measure();
+    document.fonts?.ready.then(measure);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -36,11 +56,12 @@ export default function SiteHeader() {
 
   return (
     <header
-      className={`sticky top-0 z-40 bg-page/90 backdrop-blur-xl transition-shadow duration-200 ${
-        scrolled || open ? "shadow-[0_1px_0_var(--color-line)]" : ""
+      ref={ref}
+      className={`sticky top-0 z-40 transition-[background-color,box-shadow] duration-300 ${
+        scrolled || open ? "bg-page/80 shadow-[0_1px_0_var(--color-line)] backdrop-blur-xl" : "bg-transparent"
       }`}
     >
-      <Container className="flex h-[72px] items-center gap-4 sm:gap-8">
+      <Container className="flex h-[72px] items-center gap-4 sm:gap-8 lg:h-[84px]">
         <a href="#top" className="flex shrink-0 items-center rounded-md" aria-label="BeRocker, back to top">
           <Logo className="h-[26px] w-auto sm:h-[30px]" />
         </a>
@@ -64,8 +85,15 @@ export default function SiteHeader() {
           >
             Sign in
           </a>
-          <button type="button" onClick={() => openDemo({ source: "header" })} className={buttonClass("primary", "md", "h-10 px-3.5 text-[14px] sm:px-4 sm:text-[15px]")}>
-            Book a demo
+          <button
+            type="button"
+            onClick={() => openDemo({ source: "header" })}
+            className={buttonClass("primary", "md", "sh-flip h-10 px-3.5 text-[14px] sm:h-11 sm:px-4 sm:text-[15px]")}
+          >
+            <FlipLabel className="gap-1.5">
+              Book a demo
+              <ArrowUpRight aria-hidden="true" className="hidden size-4 sm:block" />
+            </FlipLabel>
           </button>
           <button
             type="button"

@@ -1,5 +1,5 @@
 import { Container, Logo } from "@/components/ui";
-import { SITE } from "@/lib/content";
+import { FOOTER_TAGLINE, SITE } from "@/lib/content";
 
 const COLS = [
   {
@@ -49,7 +49,7 @@ export default function Footer() {
           <div>
             <Logo className="h-8 w-auto" />
             <p className="mt-4 max-w-[36ch] text-[15px] leading-6 text-ink-3">
-              Leads, quotes, conversations, payments and dispatch for auto transport brokers, in one CRM.
+              {FOOTER_TAGLINE} Leads, quotes, conversations, payments and dispatch for auto transport brokers, in one CRM.
             </p>
             <div className="mt-6 flex flex-col gap-1 text-[14px] text-ink-3">
               <a href={SITE.phoneHref} className="w-fit hover:text-ink">

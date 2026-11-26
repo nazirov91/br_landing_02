@@ -1,5 +1,6 @@
 import SiteHeader from "@/components/SiteHeader";
-import Hero from "@/components/sections/Hero";
+import AnnouncementBar from "@/components/AnnouncementBar";
+import Hero from "@/components/ui/syntra-hero";
 import Proof from "@/components/sections/Proof";
 import SuperDispatch from "@/components/sections/SuperDispatch";
 import Workflow from "@/components/sections/Workflow";
@@ -52,6 +53,7 @@ export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <AnnouncementBar />
       <SiteHeader />
       <main id="main">
         <Hero />

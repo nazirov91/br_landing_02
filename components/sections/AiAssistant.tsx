@@ -3,7 +3,7 @@
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { Bot, Check, MessageSquareText, PhoneIncoming, Plug, ShieldCheck, Sparkles, Tag, Wrench } from "lucide-react";
-import { IconChip, Placeholder, Reveal, Section, ease } from "@/components/ui";
+import { Eyebrow, IconChip, Placeholder, Reveal, Section, ease } from "@/components/ui";
 import { AI } from "@/lib/content";
 
 function ChatDemo() {
@@ -82,6 +82,7 @@ export default function AiAssistant() {
         </Reveal>
 
         <Reveal className="order-1 lg:order-2">
+          <Eyebrow>{AI.eyebrow}</Eyebrow>
           <h2 id="ai-title" className="text-balance text-[2rem] font-medium leading-[1.1] tracking-[-0.03em] text-ink sm:text-[2.4rem] lg:text-[2.75rem]">
             {AI.title}
           </h2>

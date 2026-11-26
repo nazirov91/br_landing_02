@@ -47,7 +47,7 @@ export default function Pricing() {
   return (
     <Section id="pricing" labelledBy="pricing-title">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-        <Heading id="pricing-title" title={PRICING.title} sub={PRICING.lede} />
+        <Heading id="pricing-title" eyebrow={PRICING.eyebrow} title={PRICING.title} sub={PRICING.lede} />
         <Reveal>
           <div role="radiogroup" aria-label="Billing period" onKeyDown={radios.onKeyDown} className="inline-flex rounded-[12px] bg-page-2 p-1">
             {OPTIONS.map((o, i) => {
@@ -150,9 +150,9 @@ export default function Pricing() {
         <Reveal delay={0.06}>
           <div className="flex h-full flex-col rounded-[var(--radius-panel)] surface p-7 sm:p-9">
             <h3 className="text-[22px] font-medium text-ink">Enterprise</h3>
-            <p className="mt-1 text-[15px] text-ink-3">For larger brokerages with their own requirements.</p>
+            <p className="mt-1 text-[15px] text-ink-3">Your operation. Your requirements. For larger brokerages that need more control.</p>
             <p className="mt-7 text-[2.5rem] font-medium leading-none tracking-[-0.03em] text-ink">Let&apos;s talk</p>
-            <p className="mt-2 text-[14px] text-ink-3">Custom pricing, shaped around your operation.</p>
+            <p className="mt-2 text-[14px] text-ink-3">Custom pricing around your operation.</p>
             <DemoButton source="pricing-enterprise" plan="enterprise" className={buttonClass("quiet", "lg", "mt-7 w-full")}>
               Talk to us
             </DemoButton>
@@ -185,7 +185,7 @@ export default function Pricing() {
             ))}
           </ul>
         </div>
-        <p className="mt-4 text-[13px] text-ink-3">BeRocker does not sell, generate or offer leads to customers.</p>
+        <p className="mt-4 text-[13px] text-ink-3">{PRICING.finePrint}</p>
       </Reveal>
     </Section>
   );

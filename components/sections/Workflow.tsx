@@ -50,8 +50,9 @@ export default function Workflow() {
     <Section id="product" labelledBy="product-title">
       <Heading
         id="product-title"
-        title="From first inquiry to dispatched load."
-        sub="Follow one shipment through BeRocker: it comes in, gets priced, turns into a conversation, a booking and a dispatched load, without leaving the CRM."
+        eyebrow="02 / The day-to-day, connected"
+        title="From new lead to next load."
+        sub="Every step in one CRM. Every conversation with its shipment."
       />
 
       <Reveal className="well mt-12 p-3 sm:p-4">

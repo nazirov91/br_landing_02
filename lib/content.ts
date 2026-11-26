@@ -28,20 +28,23 @@ export const SHOW_PLACEHOLDER_MARKERS = true;
 
 export const NAV = [
   { label: "Product", href: "#product" },
-  { label: "Integrations", href: "#integrations" },
+  { label: "Super Dispatch", href: "#super-dispatch" },
+  { label: "AI & MCP", href: "#ai" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Customers", href: "#customers" },
 ];
 
+/** The thin bar above the header. */
+export const ANNOUNCEMENT = {
+  text: "More connected. Less overhead.",
+  fee: "Super Dispatch API fee:",
+  href: "#super-dispatch",
+};
+
 export const HERO = {
-  eyebrow: "Now with MCP for Claude and ChatGPT",
-  title: ["Your brokerage.", "Fully connected."],
-  lede:
-    "Manage leads, quotes, conversations, payments and dispatch in one auto transport CRM, with the deepest Super Dispatch integration and support that shows up.",
-  notes: [
-    { text: "$250 Super Dispatch API fee waived", feeNote: true },
-    { text: "Connect your AI assistant through MCP", feeNote: false },
-  ],
+  eyebrow: "The CRM for auto transport brokers",
+  title: ["Close more deals.", "Move more cars."],
+  lede: "Your leads, conversations, payments, and dispatch. One connected place to run your brokerage.",
+  note: "14 days free. Migration and onboarding included.",
 };
 
 export const CLIENTS = [
@@ -83,10 +86,10 @@ export const QUOTES = {
 };
 
 export const SUPER_DISPATCH = {
-  eyebrow: "Super Dispatch",
-  title: "Super Dispatch. Fully in sync.",
+  eyebrow: "01 / Your dispatch advantage",
+  title: "Super Dispatch. Connected deeper.",
   lede:
-    "Quote, post, collect offers and dispatch without leaving BeRocker. Loads go out in one click, carrier offers come back in, and every status lands on the shipment it belongs to.",
+    "The deepest Super Dispatch integration of any auto transport CRM. Compare market prices, post loads, receive offers, dispatch and track, all without leaving BeRocker.",
   cards: [
     {
       title: "Price against the market",
@@ -198,12 +201,12 @@ export const WORKFLOW: WorkflowStep[] = [
 ];
 
 export const AI = {
-  eyebrow: "AI in BeRocker",
-  title: "Your CRM. Meet your AI assistant.",
+  eyebrow: "03 / A new way into your CRM",
+  title: "Your AI assistant. Now in the loop.",
   claim: "The only auto transport CRM with MCP support.",
   claimPlaceholder: true,
   lede:
-    "Connect Claude or ChatGPT to BeRocker through MCP and ask about your leads, follow-ups and pipeline in plain words. Anything that would change your data asks you first.",
+    "Connect ChatGPT or Claude directly to BeRocker. Ask about your business in your own words. Anything that would change your data asks you first.",
   prompt: "Who do I need to follow up with today?",
   answerIntro: "You have 5 leads on today's follow-up list. Two opened your quote yesterday but haven't booked:",
   answerItems: [
@@ -237,9 +240,9 @@ export const AI = {
 };
 
 export const INTEGRATIONS = {
-  eyebrow: "Integrations",
+  eyebrow: "04 / Keep what works",
   title: "Your tools. Working together.",
-  lede: "Keep the providers you already pay for. BeRocker connects them so every call, message, payment and load lands on the right shipment.",
+  lede: "Keep your numbers. Connect your inboxes. Bring your providers into BeRocker.",
   groups: [
     {
       key: "dispatch",
@@ -270,22 +273,21 @@ export const INTEGRATIONS = {
 };
 
 export const SUPPORT = {
-  eyebrow: "Switching to BeRocker",
-  title: "A better CRM. A team behind it.",
-  lede: "Moving CRMs is the part brokers dread, so we do the heavy lifting. A real team moves your data, connects your tools and stays with you after launch.",
+  eyebrow: "05 / People behind the platform",
+  title: "Support that stays with you.",
+  lede: "Real people who know auto transport. From your first import to your next question.",
   pillars: [
     {
-      title: "Migration",
-      body: "We bring your leads, customers and history over from your current CRM.",
-      placeholderNote: "List exactly what transfers",
+      title: "Make the move.",
+      body: "Get help bringing your data into BeRocker.",
     },
     {
-      title: "Onboarding",
-      body: "We connect your phone numbers, email, WhatsApp, payments and Super Dispatch account for you.",
+      title: "Get your team ready.",
+      body: "Connect your tools. Learn your workflow.",
     },
     {
-      title: "After launch",
-      body: "Live support from people who know auto transport, included in every plan.",
+      title: "Keep moving.",
+      body: "Live support included after you launch.",
     },
   ],
   steps: [
@@ -297,9 +299,10 @@ export const SUPPORT = {
 };
 
 export const PRICING = {
-  eyebrow: "Pricing",
-  title: "Everything included. Clearly priced.",
-  lede: "One plan with everything in it. No feature gates, no surprise add-ons. Add seats as your team grows; the more you add, the less each one costs.",
+  eyebrow: "06 / Simple to get started",
+  title: "The full CRM. From day one.",
+  lede: "Everything you need to run your brokerage, in one plan. Add seats as your team grows; the more you add, the less each one costs.",
+  finePrint: "Super Dispatch loadboard access and provider usage charges are separate. BeRocker does not sell leads.",
   monthly: 199,
   annualTotal: 1908,
   annualFullPrice: 2388,
@@ -338,17 +341,20 @@ export type FaqItem = { q: string; a: string; placeholder?: boolean };
 
 export const FAQ: FaqItem[] = [
   {
-    q: "How does migration from my current CRM work?",
-    a: "Migration is included in every plan. Our team moves your data over from your current CRM and sets BeRocker up with you during onboarding, so you don't start from an empty pipeline.",
+    q: "Can you help me switch from another CRM?",
+    a: "Yes. Migration and onboarding support are included. Our team will walk through your current setup and confirm what can transfer.",
   },
   {
-    q: "Can I keep my existing phone numbers?",
-    a: "Yes. BeRocker connects your existing business numbers through RingCentral, Twilio, Telnyx or OpenPhone, plus your WhatsApp Business account and email provider. Customers keep reaching you on the numbers they already know.",
+    q: "Can I keep my phone numbers and email?",
+    a: "BeRocker connects with supported phone and email providers, including RingCentral, Twilio, Telnyx, WhatsApp Business, SendGrid and Mailgun. We'll review your current services during onboarding.",
   },
   {
-    q: "Do I need my own Super Dispatch account?",
-    a: "Placeholder: what a broker needs on the Super Dispatch side, and how the waived $250 API fee is applied.",
-    placeholder: true,
+    q: "What does the $250 Super Dispatch waiver cover?",
+    a: "The Super Dispatch API fee is waived when you use BeRocker. Super Dispatch loadboard access is separate.",
+  },
+  {
+    q: "What is MCP?",
+    a: "MCP is a connection that lets assistants such as ChatGPT and Claude work with BeRocker tools and data. You can ask about your CRM in plain language.",
   },
   {
     q: "Is there a contract?",
@@ -357,19 +363,22 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: "Are there any usage charges?",
-    a: "Placeholder: whether SMS, calls, AI or anything else is billed on top of seats.",
+    a: "Super Dispatch loadboard access and your providers' own usage charges, such as your phone or email provider, are separate. Placeholder: confirm whether BeRocker bills anything on top of seats.",
     placeholder: true,
   },
   {
     q: "Can I use BeRocker on my phone?",
-    a: "Yes. BeRocker works on desktop, tablet and phone with the same full workspace: quote a lead, answer a customer or dispatch a load from anywhere.",
+    a: "Yes. BeRocker works across desktop, tablet, and phone: quote a lead, answer a customer or dispatch a load from anywhere.",
   },
 ];
 
 export const FINAL_CTA = {
-  title: "See your next brokerage workflow.",
-  lede: "Start a 14-day free trial, or book a 30-minute walkthrough and we'll show BeRocker on your own lanes.",
+  eyebrow: "Your next move",
+  title: "Meet your next CRM.",
+  lede: "See what your brokerage can do with BeRocker. Book a demo, or start your 14-day free trial.",
 };
+
+export const FOOTER_TAGLINE = "Built for the business of moving cars.";
 
 export const SMS_CONSENT =
   "By providing your phone number, you agree to receive SMS Marketing from BeRocker. Message frequency may vary. Standard Message and Data Rates may apply. Reply STOP to opt out. Reply HELP for help. We will not share mobile information with third parties for promotional or marketing purposes.";

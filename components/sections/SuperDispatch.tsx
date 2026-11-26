@@ -104,7 +104,7 @@ export default function SuperDispatch() {
 
   return (
     <Section id="super-dispatch" labelledBy="sd-title" tone="white">
-      <Heading id="sd-title" title={SUPER_DISPATCH.title} sub={SUPER_DISPATCH.lede} />
+      <Heading id="sd-title" eyebrow={SUPER_DISPATCH.eyebrow} title={SUPER_DISPATCH.title} sub={SUPER_DISPATCH.lede} />
 
       <Reveal className="mt-12">
         <div role="tablist" aria-label="Super Dispatch features" onKeyDown={tabs.onKeyDown} className="grid gap-3 sm:grid-cols-3">

@@ -8,7 +8,7 @@ const ICONS = { dispatch: Truck, communications: MessagesSquare, payments: Credi
 export default function Integrations() {
   return (
     <Section id="integrations" labelledBy="int-title">
-      <Heading id="int-title" title={INTEGRATIONS.title} sub={INTEGRATIONS.lede} />
+      <Heading id="int-title" eyebrow={INTEGRATIONS.eyebrow} title={INTEGRATIONS.title} sub={INTEGRATIONS.lede} />
 
       <div className="mt-12 grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <div className="grid gap-3 sm:grid-cols-2">
