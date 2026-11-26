@@ -5,11 +5,12 @@
   Ported as-is from the "BeRocker Key Deck" artboard. Tap (or click) to lift the keys
   and show how each module connects; tap again to close.
 */
-import { Fragment, useId, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronDown, Sparkles } from "lucide-react";
 
+var noop = () => () => {};
 var df = Math.SQRT1_2,
   ff = Math.sin(Math.PI / 3),
   pf = ({ x: e, y: t, z: n }) => [(e - t) * df, (e + t) * df * 0.5 - n * ff],
@@ -209,7 +210,10 @@ function Df({
   className: o = ``,
   listClassName: lc = ``,
 }) {
-  let s = useReducedMotion(),
+  // The motion setting is read only after hydration, so the first client render matches the server HTML.
+  let hydrated = useSyncExternalStore(noop, () => !0, () => !1),
+    prefersReduced = useReducedMotion(),
+    s = hydrated && !!prefersReduced,
     c = useId().replace(/:/g, ``),
     l = useRef(null),
     [u, d] = useState(0),
