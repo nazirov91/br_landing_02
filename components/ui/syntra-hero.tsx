@@ -1,40 +1,23 @@
 "use client";
 
 /*
-  The hero: the Syntra hero layout (21st.dev) in BeRocker colours, with the BeRocker Key Deck
-  as its visual: six modules on one AI foundation, drawn as a 3D keyboard. Tap it to lift the
-  keys and see how each module connects. Copy on the left, the deck on the right, an isometric
-  floor grid behind both with a soft spotlight that follows the cursor.
+  The hero: the Syntra hero layout (21st.dev) in BeRocker colours, with BeRocker OS as its
+  visual: BeRocker as the operating system for auto transport, a desktop whose dock holds the
+  modules as apps and whose windows play one shipment through them. Copy on the left, the OS
+  on the right, an isometric floor grid behind both with a soft spotlight that follows the cursor.
 
   Every colour is a token: SVG attributes use var(--color-*) and the CSS lives in globals.css.
 */
 
 import { useEffect, useRef } from "react";
 import type { SVGProps } from "react";
-import { ArrowRight, Bot, Calculator, CalendarCheck2, Inbox, Play, Plug, Sparkles, Timer, Truck, Waypoints } from "lucide-react";
-import KeyDeck from "@/components/ui/key-deck";
+import { ArrowRight, CalendarCheck2, Inbox, Play, Timer } from "lucide-react";
+import BeRockerOS from "@/components/ui/berocker-os";
 import { FlipLabel, buttonClass } from "@/components/ui";
 import { HERO, SITE, STATS } from "@/lib/content";
 
 const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
 const C = (name: string) => `var(--color-${name})`;
-
-/* ───────────── The Key Deck's modules ───────────── */
-
-const KEYS = [
-  { label: "Lead Management", detail: "Every lead source in one inbox, assigned to the right rep", icon: Inbox },
-  { label: "Loadboards", detail: "Post to Super Dispatch and Central Dispatch in one click", icon: Waypoints },
-  { label: "Dispatch", detail: "Compare carrier offers and dispatch the winner", icon: Truck },
-  { label: "Accounting", detail: "Payments, carrier payables, commissions and QuickBooks", icon: Calculator },
-  { label: "Integrations", detail: "Phones, email, payments, webhooks and an API", icon: Plug },
-  { label: "ChatGPT", detail: "Ask your CRM in plain words through MCP", icon: Bot },
-];
-
-const FOUNDATION = {
-  label: "AI agents",
-  detail: "Work across every module: answer customers, price leads and draft follow-ups for your team.",
-  icon: Sparkles,
-};
 
 /* ───────────── Floor grid with a spotlight that follows the cursor ───────────── */
 
@@ -191,10 +174,7 @@ export default function SyntraHero() {
       <HeroFloor />
       <div className="mx-auto grid w-full max-w-[1280px] items-center gap-10 px-5 pb-14 pt-6 sm:px-10 lg:min-h-[inherit] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 lg:py-10 xl:gap-16">
         <HeroCopy />
-        <div className="sh-enter mx-auto w-full max-w-[600px] lg:mx-0 lg:justify-self-end">
-          {/* On wide screens the deck sits beside the copy, so its parts list stays for screen readers only. */}
-          <KeyDeck keys={KEYS} foundation={FOUNDATION} listClassName="lg:sr-only" />
-        </div>
+        <BeRockerOS className="sh-enter mx-auto w-full max-w-[600px] lg:mx-0 lg:justify-self-end" />
       </div>
     </section>
   );

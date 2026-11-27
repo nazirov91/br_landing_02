@@ -41,7 +41,7 @@ export const ANNOUNCEMENT = {
 };
 
 export const HERO = {
-  eyebrow: "The CRM for auto transport brokers",
+  eyebrow: "The operating system for auto transport",
   title: ["Close more deals.", "Move more cars."],
   lede: "Your leads, conversations, payments, and dispatch. One connected place to run your brokerage.",
   note: "14 days free. Migration and onboarding included.",
